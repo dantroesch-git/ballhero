@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#0e1230">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="BallHero">
+  <title>BallHero Kids</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- ============ WELCOME / ONBOARDING ============ -->
+    <section id="screen-welcome" class="screen">
+      <div style="text-align:center; margin: 20px 0 10px;">
+        <div style="font-size:4.5rem">⚽️</div>
+        <h1>BallHero Kids</h1>
+        <p>Dein täglicher Technik-Coach.<br>Kleine Missionen, echter Fortschritt.</p>
+      </div>
+      <div class="card pad-lg">
+        <h3>Wer trainiert?</h3>
+        <div class="field">
+          <label for="kidName">Name</label>
+          <input type="text" id="kidName" placeholder="z. B. Leo" autocomplete="off" maxlength="16">
+        </div>
+        <div class="field">
+          <label for="kidAge">Alter</label>
+          <input type="number" id="kidAge" placeholder="6" min="3" max="14" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label>Avatar</label>
+          <div class="avatar-picker" id="avatarPicker"></div>
+        </div>
+        <button class="btn" id="createProfile">Los geht's ⚽️</button>
+        <p class="hint">Alle Daten bleiben nur auf diesem Gerät. Keine Anmeldung, keine Werbung.</p>
+      </div>
+    </section>
+
+    <!-- ============ HOME ============ -->
+    <section id="screen-home" class="screen">
+      <div class="topbar">
+        <div class="avatar" id="homeAvatar">🦊</div>
+        <div class="who">
+          <div class="small">Hallo,</div>
+          <div class="name" id="homeName">Leo</div>
+        </div>
+        <div class="chip flame" title="Streak"><span id="homeStreak">0</span>🔥</div>
+        <div class="chip xp" title="XP">⭐<span id="homeXP">0</span></div>
+      </div>
+
+      <!-- Level / Rang: sichtbares Ziel + Maskottchen "Kicky" -->
+      <div class="card rank-card" id="rankCard">
+        <div class="mascot" id="mascot">
+          <svg viewBox="0 0 100 100" class="mascot-svg">
+            <circle cx="50" cy="52" r="34" fill="#ffd23f" stroke="#2a2100" stroke-width="3"/>
+            <polygon points="50,34 61,42 57,55 43,55 39,42" fill="#2a2100"/>
+            <circle cx="38" cy="48" r="5.5" fill="#fff"/><circle cx="62" cy="48" r="5.5" fill="#fff"/>
+            <circle cx="39" cy="49" r="2.6" fill="#2a2100"/><circle cx="61" cy="49" r="2.6" fill="#2a2100"/>
+            <path d="M40 66 q10 9 20 0" stroke="#2a2100" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="rank-info">
+          <div class="rank-top"><span id="rankName">Anfänger</span><span class="small" id="rankNext">noch 60 XP</span></div>
+          <div class="bar rank-bar"><span id="rankBar" style="width:0%"></span></div>
+        </div>
+      </div>
+
+      <!-- Trainingsstil wählen (Barça / Ajax / PSG / Allround) -->
+      <div class="section-label">🎓 Trainingsstil</div>
+      <div class="academy-row" id="academyRow"></div>
+      <div class="small academy-philo" id="academyPhilo"></div>
+
+      <div class="card" style="background:linear-gradient(135deg,#242c66,#1a2050)">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h3 style="margin-bottom:2px">Heutige Missionen</h3>
+            <div class="small" id="homeProgressLbl">0 / 6 erledigt</div>
+          </div>
+          <div class="chip xp" id="homeTodayStars">⭐ 0</div>
+        </div>
+        <div class="bar ballControl" style="margin-top:12px"><span id="homeDayBar" style="width:0%"></span></div>
+      </div>
+
+      <div id="missionList"></div>
+
+      <div class="card center" id="allDoneCard" style="display:none">
+        <div style="font-size:2.6rem">🏆</div>
+        <h3>Alles erledigt — stark!</h3>
+        <p class="small">Komm morgen wieder für deine Streak.</p>
+      </div>
+    </section>
+
+    <!-- ============ MISSION DETAIL ============ -->
+    <section id="screen-mission" class="screen">
+      <button class="btn ghost sm" id="missionBack" style="align-self:flex-start;margin-bottom:6px">‹ Zurück</button>
+
+      <!-- Animierte Demo: zeigt die Bewegung ohne ein einziges Wort -->
+      <div class="demo-box" id="mDemo"></div>
+
+      <div class="center">
+        <h1 id="mDetailTitle">Toe Taps</h1>
+        <div class="goal-num" id="mGoalNum">100</div>
+        <div class="goal-dots" id="mGoalDots"></div>
+        <div class="small" id="mGoalUnit">Kontakte</div>
+      </div>
+
+      <!-- Vorlesen: der wichtigste Knopf für Nicht-Leser -->
+      <button class="listen-btn mt" id="mListen">
+        <span class="spk">🔊</span><span>Nochmal erklären</span>
+      </button>
+
+      <div class="row-btns mt">
+        <button class="btn green icon-btn" id="startCamera">
+          <span class="big-ic">🎥</span><span class="lbl">Mit Kamera</span>
+        </button>
+        <button class="btn secondary icon-btn" id="startManual">
+          <span class="big-ic">✋</span><span class="lbl">Nur zählen</span>
+        </button>
+      </div>
+
+      <!-- Details für Eltern, eingeklappt -->
+      <details class="card mt" id="mParentInfo">
+        <summary style="cursor:pointer;font-weight:700">Für Eltern: Technik-Details</summary>
+        <p id="mDetailDesc" style="margin-top:10px"></p>
+        <h3 style="margin-top:10px">Achte darauf</h3>
+        <ul class="cues" id="mDetailCues"></ul>
+        <div class="tags" id="mDetailTags"></div>
+      </details>
+      <p class="hint">Handy aufstellen (Stativ/anlehnen), damit man Beine & Ball sieht.</p>
+    </section>
+
+    <!-- ============ CAMERA / RECORDING STUDIO ============ -->
+    <section id="screen-camera" class="screen">
+
+      <!-- Step 0: Aufbau-Erklärung (bevor die Kamera läuft) -->
+      <div id="camSetupCard" class="card pad-lg">
+        <div class="center">
+          <div style="font-size:3rem">🤳</div>
+          <h2>Handy aufstellen</h2>
+        </div>
+        <ul class="cues">
+          <li><span class="dot">1</span>Lehn das Handy an etwas an (Wand, Tasche, Flasche) — <b>hochkant</b>.</li>
+          <li><span class="dot">2</span>Geh ca. <b>3 große Schritte</b> zurück.</li>
+          <li><span class="dot">3</span>Die App sagt dir laut, wann du richtig stehst.</li>
+          <li><span class="dot">4</span>Sie zählt runter und startet <b>von allein</b>. 🎉</li>
+        </ul>
+        <div class="field mt">
+          <label for="setDuration">Wie lange?</label>
+          <div class="row-btns" id="durationPicker">
+            <button class="btn secondary sm dur" data-sec="20">20 s</button>
+            <button class="btn secondary sm dur sel" data-sec="30">30 s</button>
+            <button class="btn secondary sm dur" data-sec="45">45 s</button>
+            <button class="btn secondary sm dur" data-sec="60">60 s</button>
+          </div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="voiceOn" checked>
+          <span>🔊 Sprach-Ansagen (empfohlen)</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="saveVideoOn" checked>
+          <span>🎬 Video speichern (für Vorher/Nachher)</span>
+        </label>
+        <button class="btn green mt" id="camBegin">Kamera starten 🎥</button>
+        <button class="btn ghost" id="camCancelSetup">Abbrechen</button>
+      </div>
+
+      <!-- Live-Kamera -->
+      <div id="camStage" style="display:none">
+        <div id="camWrap">
+          <video id="cam" autoplay playsinline muted></video>
+          <canvas id="overlay"></canvas>
+
+          <!-- Rahmen-Hilfe -->
+          <div id="frameGuide"></div>
+
+          <div class="cam-hud">
+            <div class="cam-timer" id="camTimer">0:30</div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+              <div class="cam-badge" id="camReps">Kontakte: 0</div>
+              <div class="cam-badge" id="camPose">Pose: …</div>
+            </div>
+          </div>
+
+          <!-- Riesen-Countdown, aus 3 m lesbar -->
+          <div id="bigCount"></div>
+
+          <!-- Aufnahme-Punkt -->
+          <div id="recDot"><span class="dot-pulse"></span>REC</div>
+
+          <div class="cam-status" id="camStatus">Kamera wird gestartet…</div>
+        </div>
+
+        <!-- Steuerung: wechselt je nach Phase -->
+        <div id="camControls" class="mt"></div>
+        <p class="hint" id="camHint">Skelett-Erkennung läuft lokal auf deinem Gerät.</p>
+      </div>
+
+      <!-- Review nach der Aufnahme -->
+      <div id="camReview" style="display:none">
+        <div class="center">
+          <h2 id="reviewTitle">Aufnahme fertig! 🎉</h2>
+          <p class="small" id="reviewSub"></p>
+        </div>
+        <video id="reviewVideo" class="review-video" controls playsinline></video>
+        <div class="row-btns mt">
+          <button class="btn green" id="reviewKeep">✓ Speichern & fertig</button>
+          <button class="btn secondary" id="reviewRetry">↻ Nochmal</button>
+        </div>
+        <button class="btn ghost" id="reviewDiscard" style="margin-top:8px">Video verwerfen</button>
+      </div>
+    </section>
+
+    <!-- ============ MANUAL COUNT ============ -->
+    <section id="screen-manual" class="screen">
+      <button class="btn ghost sm" id="manualBack" style="align-self:flex-start">‹ Zurück</button>
+      <div class="center" style="margin-top:8px">
+        <div class="demo-box" id="manDemo" style="max-width:220px;margin:0 auto 10px"></div>
+        <h2 id="manTitle">Toe Taps</h2>
+        <p class="small" id="manGoal">Ziel: 100 Kontakte</p>
+      </div>
+      <div class="card">
+        <div class="counter">
+          <button id="manMinus">−</button>
+          <div class="num" id="manCount">0</div>
+          <button class="plus" id="manPlus">+</button>
+        </div>
+        <div class="bar ballControl"><span id="manBar" style="width:0%"></span></div>
+        <p class="hint">Tippe bei jeder Wiederholung auf +. Oder zähl einfach mit und trag am Ende ein.</p>
+      </div>
+      <button class="btn green" id="manDone">✓ Mission abschließen</button>
+    </section>
+
+    <!-- ============ PROGRESS ============ -->
+    <section id="screen-progress" class="screen">
+      <h1>Dein Fortschritt</h1>
+      <p class="small" id="progSubtitle">Seit dem Start</p>
+
+      <!-- Rang / Level groß dargestellt -->
+      <div class="card level-hero" id="levelHero">
+        <div class="level-emoji" id="levelEmoji">🐣</div>
+        <div style="flex:1">
+          <div class="level-name" id="levelName">Anfänger</div>
+          <div class="bar rank-bar" style="margin:8px 0 4px"><span id="levelBar" style="width:0%"></span></div>
+          <div class="small" id="levelNext">noch 60 XP bis Kicker</div>
+        </div>
+      </div>
+
+      <!-- Trophäen-Regal -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="margin:0">🏆 Trophäen</h3>
+          <span class="small" id="badgeCount">0 / 0</span>
+        </div>
+        <div class="badge-grid" id="badgeGrid"></div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat"><div class="n yellow" id="statContacts">0</div><div class="l">Ballkontakte gesamt</div></div>
+        <div class="stat"><div class="n green" id="statSessions">0</div><div class="l">Trainings</div></div>
+        <div class="stat"><div class="n" id="statStreak">0</div><div class="l">Streak 🔥</div></div>
+        <div class="stat"><div class="n blue" id="statMinutes">0</div><div class="l">Minuten trainiert</div></div>
+      </div>
+
+      <div class="card">
+        <h3>Skill-Profil</h3>
+        <div class="skill">
+          <div class="row"><span>⚽️ Ballkontrolle</span><span class="val" id="lblBallControl">0%</span></div>
+          <div class="bar ballControl"><span id="barBallControl" style="width:0%"></span></div>
+        </div>
+        <div class="skill">
+          <div class="row"><span>🦶 Schwacher Fuß</span><span class="val" id="lblWeakFoot">0%</span></div>
+          <div class="bar weakFoot"><span id="barWeakFoot" style="width:0%"></span></div>
+        </div>
+        <div class="skill">
+          <div class="row"><span>🏃 Dribbling</span><span class="val" id="lblDribbling">0%</span></div>
+          <div class="bar dribbling"><span id="barDribbling" style="width:0%"></span></div>
+        </div>
+        <div class="skill">
+          <div class="row"><span>⚡️ Koordination</span><span class="val" id="lblCoordination">0%</span></div>
+          <div class="bar coordination"><span id="barCoordination" style="width:0%"></span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Coach-Tipp der Woche</h3>
+        <p id="coachTip">Trainiere jeden Tag ein bisschen — kleine Kontakte, Kopf öfter hoch.</p>
+      </div>
+    </section>
+
+    <!-- ============ PARENT DASHBOARD ============ -->
+    <section id="screen-parent" class="screen">
+      <h1>Eltern-Dashboard</h1>
+      <p class="small">Überblick für die Woche</p>
+
+      <div class="card">
+        <h3>Diese Woche</h3>
+        <div class="week" id="weekChart"></div>
+        <div class="small center">Ballkontakte pro Tag</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat"><div class="n yellow" id="pWeekContacts">0</div><div class="l">Kontakte / Woche</div></div>
+        <div class="stat"><div class="n green" id="pWeekSessions">0</div><div class="l">Trainings / Woche</div></div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="margin:0">🎬 Videos</h3>
+          <span class="small" id="vidMeta"></span>
+        </div>
+        <p class="small" style="margin:6px 0 10px">Für den Vorher/Nachher-Vergleich. Bleibt nur auf diesem Gerät.</p>
+        <div id="videoList"></div>
+      </div>
+
+      <div class="card">
+        <h3>Entwicklung</h3>
+        <p id="parentInsight" class="small">Noch nicht genug Daten. Nach ein paar Trainings zeigen wir hier Trends.</p>
+      </div>
+
+      <div class="card">
+        <h3>Nächster Wochenplan</h3>
+        <p class="small" id="weekPlan">Wird nach dem ersten Training erstellt.</p>
+      </div>
+
+      <div class="card">
+        <h3>Einstellungen</h3>
+        <label class="toggle">
+          <input type="checkbox" id="voiceGlobal" checked>
+          <span>🔊 App liest alles vor (für Kinder, die noch nicht lesen)</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="countAloud" checked>
+          <span>🔢 Beim Zählen laut mitzählen</span>
+        </label>
+
+        <div class="field" style="margin-top:12px">
+          <label for="voiceSelect">🗣️ Stimme</label>
+          <div style="display:flex;gap:8px">
+            <select id="voiceSelect" style="flex:1"></select>
+            <button class="btn secondary sm" id="voiceTest" style="width:auto;white-space:nowrap">▶︎ Test</button>
+          </div>
+          <p class="hint" id="voiceHint" style="text-align:left;margin-top:8px"></p>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <button class="btn secondary" id="switchKid">👦 Profil wechseln / neu</button>
+      <button class="btn ghost" id="resetAll" style="margin-top:8px">Alle Daten löschen</button>
+    </section>
+
+    <!-- ============ BOTTOM NAV ============ -->
+    <nav class="nav hidden" id="nav">
+      <button data-screen="home" class="active"><span class="ic">🏠</span>Start</button>
+      <button data-screen="progress"><span class="ic">📈</span>Fortschritt</button>
+      <button data-screen="parent"><span class="ic">👨‍👩‍👦</span>Eltern</button>
+    </nav>
+
+    <!-- ============ REWARD OVERLAY ============ -->
+    <div class="reward" id="reward">
+      <div class="box">
+        <div class="big" id="rewardEmoji">🏅</div>
+        <h2 id="rewardTitle">Super gemacht!</h2>
+        <div class="stars-earned" id="rewardStars">⭐️⭐️⭐️</div>
+        <p id="rewardMsg" class="center"></p>
+        <button class="btn" id="rewardClose" style="max-width:240px;margin:0 auto">Weiter</button>
+      </div>
+    </div>
+
+    <!-- ============ VIDEO PLAYER OVERLAY ============ -->
+    <div class="reward" id="player">
+      <div class="box" style="width:100%;max-width:420px">
+        <h3 id="playerTitle" style="margin-bottom:8px">Video</h3>
+        <video id="playerVideo" class="review-video" controls playsinline></video>
+        <div class="row-btns mt">
+          <button class="btn secondary" id="playerClose">Schließen</button>
+          <button class="btn danger" id="playerDelete">Löschen</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- Konfetti-Ebene (über allem, klick-durchlässig) -->
+    <div id="confetti"></div>
+  </div>
+
+  <script src="demos.js?v=8"></script>
+  <script src="app.js?v=8"></script>
+</body>
+</html>

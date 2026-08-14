@@ -1,0 +1,15 @@
+{
+  "name": "BallHero Kids",
+  "short_name": "BallHero",
+  "description": "Täglicher Fußball-Technik-Coach für Kinder – Missionen, Kamera-Analyse, Fortschritt.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e1230",
+  "theme_color": "#0e1230",
+  "lang": "de",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
