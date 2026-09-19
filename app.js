@@ -595,7 +595,7 @@ function pad(n) { return n < 10 ? '0' + n : '' + n; }
 function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
 
 /* ---------------- Screen router ---------------- */
-const screens = ['welcome', 'home', 'mission', 'camera', 'manual', 'library', 'progress', 'parent'];
+const screens = ['welcome', 'home', 'mission', 'camera', 'manual', 'library', 'progress', 'parent', 'report'];
 function go(name) {
   screens.forEach(s => document.getElementById('screen-' + s).classList.toggle('active', s === name));
   const nav = document.getElementById('nav');
@@ -1945,6 +1945,8 @@ function renderParent() {
   renderVideoList();
   renderVoicePicker();
   renderGearSettings();
+  renderAnalysisCard();
+  loadReport();
 
   // insight + plan
   document.getElementById('parentInsight').textContent = parentInsight(weekContacts, weekSessions);
@@ -1982,6 +1984,89 @@ function renderGearSettings() {
 function openShop() {
   go('parent'); renderParent();
   setTimeout(() => { const el = document.getElementById('gearShop'); if (el) el.scrollIntoView({ block: 'center' }); }, 60);
+}
+
+/* ===========================================================
+   PROFI-COACH-ANALYSE (Report + Trigger)
+   Pilot (Wizard-of-Oz): Eltern fordern an → wir erstellen
+   reports/<profilId>.json auf dem Laptop → App lädt & zeigt ihn.
+   =========================================================== */
+async function loadReport() {
+  if (!S.activeId) return;
+  try {
+    const res = await fetch('reports/' + S.activeId + '.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) return;
+    const data = await res.json();
+    const cur = S.progress.report || {};
+    // neuer Report (anderer Zeitstempel) → als „fertig" übernehmen
+    if (!cur.data || cur.data.ts !== data.ts) {
+      S.progress.report = { status: 'ready', data };
+      save();
+      renderAnalysisCard();
+    }
+  } catch (e) { /* offline / keine Datei → ignorieren */ }
+}
+function requestAnalysis() {
+  S.progress.report = { status: 'pending', requestedAt: Date.now(), data: (S.progress.report && S.progress.report.data) || null };
+  save();
+  renderAnalysisCard();
+  toast('Analyse angefordert 🔍');
+  say('Alles klar! Deine Profi-Analyse kommt in ein paar Stunden.', { force: true });
+}
+function renderAnalysisCard() {
+  const card = document.getElementById('analysisCard');
+  if (!card) return;
+  const r = S.progress.report || { status: 'none' };
+  if (r.status === 'ready' && r.data) {
+    card.innerHTML = '<h3>🏅 Profi-Coach-Analyse</h3>' +
+      '<p class="small" style="margin:4px 0 10px">Fertig für <b>' + (r.data.profileName || S.profile.name) + '</b>' +
+      (r.data.dateLabel ? ' · ' + r.data.dateLabel : '') + '</p>' +
+      '<button class="btn green" id="repOpen">✅ Analyse ansehen</button>' +
+      '<button class="btn secondary mt" id="repAgain">🔍 Neue Analyse anfordern</button>';
+    document.getElementById('repOpen').onclick = () => openReport();
+    document.getElementById('repAgain').onclick = () => requestAnalysis();
+  } else if (r.status === 'pending') {
+    card.innerHTML = '<h3>⏳ Analyse läuft…</h3>' +
+      '<p class="small" style="margin-top:4px">Dein Coach schaut sich das Video an — das Ergebnis ist in ein paar Stunden hier. Du kannst die App normal weiter nutzen.</p>';
+  } else {
+    card.innerHTML = '<h3>🏅 Profi-Coach-Analyse</h3>' +
+      '<p class="small" style="margin:4px 0 10px">Lass die Technik deines Kindes vom Coach analysieren — mit klaren Tipps & Challenge. Nimm eine Übung mit der Kamera auf und fordere die Analyse an.</p>' +
+      '<button class="btn" id="repRequest">🔍 Profi-Analyse anfordern</button>';
+    document.getElementById('repRequest').onclick = () => requestAnalysis();
+  }
+}
+function openReport() {
+  const r = S.progress.report;
+  if (!r || !r.data) return;
+  renderReport(r.data);
+  go('report');
+  setTimeout(() => speakReport(r.data), 300);
+}
+function renderReport(d) {
+  document.getElementById('repEmoji').textContent = d.emoji || '🏅';
+  document.getElementById('repHeadline').textContent = d.headline || 'Deine Coach-Analyse';
+  document.getElementById('repSub').textContent = (d.profileName || S.profile.name) + (d.dateLabel ? ' · ' + d.dateLabel : '');
+  const item = it => '<div class="rep-item">' +
+    (it.img ? '<img class="rep-frame" src="' + it.img + '" alt="">' : '') +
+    '<div class="rep-text">' + it.text + '</div></div>';
+  document.getElementById('repGood').innerHTML = (d.good || []).map(item).join('') || '<p class="small">—</p>';
+  document.getElementById('repImprove').innerHTML = (d.improve || []).map(item).join('') || '<p class="small">—</p>';
+  const ch = d.challenge;
+  const cm = ch && MISSIONS.find(m => m.id === ch.missionId);
+  document.getElementById('repChallenge').innerHTML = ch
+    ? '<p style="margin:0 0 10px">' + (ch.text || '') + '</p>' +
+      (cm ? '<button class="btn green" id="repChallengeGo">' + cm.emoji + ' ' + cm.title + ' starten</button>' : '')
+    : '<p class="small">—</p>';
+  const cg = document.getElementById('repChallengeGo');
+  if (cg) cg.onclick = () => { stopSpeaking(); openMission(ch.missionId, 'report'); };
+}
+function speakReport(d) {
+  if (!VOICE.enabled) return;
+  let t = (d.headline || '') + '. ';
+  if (d.good && d.good.length) t += 'Das machst du gut: ' + d.good.map(g => g.text).join('. ') + '. ';
+  if (d.improve && d.improve.length) t += 'Daran arbeiten wir: ' + d.improve.map(g => g.text).join('. ') + '. ';
+  if (d.challenge && d.challenge.text) t += 'Deine Challenge: ' + d.challenge.text;
+  say(t, { force: true });
 }
 
 /* Stimmen-Auswahl im Eltern-Bereich: Liste + Test + Geräte-Tipp */
@@ -2108,6 +2193,8 @@ function wireStaticEvents() {
   document.getElementById('playerAnalyze').onclick = openAnalyzer;
   wireAnalyzer();
   document.getElementById('ytClose').onclick = closeYt;
+  document.getElementById('reportBack').onclick = () => { stopSpeaking(); go('parent'); };
+  document.getElementById('repListen').onclick = () => { const r = S.progress.report; if (r && r.data) speakReport(r.data); };
 
   document.getElementById('manualBack').onclick = () => { stopSpeaking(); go('mission'); };
   document.getElementById('manPlus').onclick = () => { manualCount++; updateManual(); countAloud(manualCount); sfx.tap(); haptic(12); };

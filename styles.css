@@ -413,6 +413,16 @@ select:focus { outline: 2px solid var(--primary); }
 .an-btn.on { background: var(--green); color: #04231a; border-color: transparent; }
 .an-dot { width: 20px; height: 20px; border-radius: 50%; background: #ff5a5a; display: inline-block; border: 2px solid #fff; }
 
+/* Profi-Coach-Analyse (Karte + Report) */
+.analysis-card { background: linear-gradient(135deg, #2a2166, #1a2050); }
+.report-hero { text-align: center; padding: 6px 0 4px; }
+.report-hero .rep-emoji { font-size: 3.4rem; line-height: 1; }
+.report-hero h1 { margin: 8px 0 2px; }
+.rep-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.rep-item:last-child { border-bottom: none; }
+.rep-item .rep-frame { width: 110px; height: 72px; object-fit: cover; border-radius: 10px; flex-shrink: 0; background: #000; }
+.rep-item .rep-text { font-size: 0.98rem; line-height: 1.45; padding-top: 2px; }
+
 /* Echte Beispiel-Videos (YouTube) */
 .vids-head { font-weight: 800; font-size: 0.95rem; margin: 12px 2px 8px; }
 .vids-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }

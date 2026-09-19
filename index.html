@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="BallHero">
   <title>BallHero Kids</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=19">
+  <link rel="stylesheet" href="styles.css?v=20">
 </head>
 <body>
   <div id="app">
@@ -303,6 +303,9 @@
       <h1>Eltern-Dashboard</h1>
       <p class="small">Überblick für die Woche</p>
 
+      <!-- Profi-Coach-Analyse (Report + Trigger) -->
+      <div class="card analysis-card" id="analysisCard"></div>
+
       <div class="card">
         <h3>Diese Woche</h3>
         <div class="week" id="weekChart"></div>
@@ -374,6 +377,32 @@
     </section>
 
     <!-- ============ BOTTOM NAV ============ -->
+    <!-- ============ PROFI-COACH-REPORT ============ -->
+    <section id="screen-report" class="screen">
+      <button class="btn ghost sm" id="reportBack" style="align-self:flex-start;margin-bottom:6px">‹ Zurück</button>
+      <div class="report-hero">
+        <div class="rep-emoji" id="repEmoji">🏅</div>
+        <h1 id="repHeadline">Deine Coach-Analyse</h1>
+        <p class="small" id="repSub"></p>
+        <button class="listen-btn mt" id="repListen"><span class="spk">🔊</span><span>Vorlesen</span></button>
+      </div>
+
+      <div class="card">
+        <h3>✅ Das machst du gut</h3>
+        <div id="repGood"></div>
+      </div>
+
+      <div class="card">
+        <h3>🎯 Daran arbeiten wir</h3>
+        <div id="repImprove"></div>
+      </div>
+
+      <div class="card" style="background:linear-gradient(135deg,#1f5a3a,#183f2c)">
+        <h3>⚡️ Deine Challenge diese Woche</h3>
+        <div id="repChallenge"></div>
+      </div>
+    </section>
+
     <nav class="nav hidden" id="nav">
       <button data-screen="home" class="active"><span class="ic">🏠</span>Start</button>
       <button data-screen="library"><span class="ic">📚</span>Übungen</button>
@@ -458,7 +487,7 @@
     <div id="confetti"></div>
   </div>
 
-  <script src="demos.js?v=19"></script>
-  <script src="app.js?v=19"></script>
+  <script src="demos.js?v=20"></script>
+  <script src="app.js?v=20"></script>
 </body>
 </html>
