@@ -4,6 +4,11 @@
    =========================================================== */
 'use strict';
 
+/* Backend (Supabase Edge Function) für den Profi-Coach-Report-Push.
+   Kinder-Daten sind per RLS gesperrt; nur diese Funktion (Service-Key) liest/schreibt.
+   Zugriff nur mit dem unratbaren Profil-Code. */
+const BACKEND = 'https://lmymmvudmdvecpawufmm.supabase.co/functions/v1/ballhero-reports';
+
 /* ---------------- Mission catalog ---------------- */
 const MISSIONS = [
   {
@@ -1146,6 +1151,7 @@ async function loadPose() {
 
 /* ---------------- Camera state ---------------- */
 let camStream = null, rafId = null;
+let camFacing = 'environment';   // 'environment' = Rückkamera (Standard fürs Filmen), 'user' = Frontkamera
 let mediaRecorder = null, recChunks = [], recBlob = null, recUrl = null;
 let camElapsed = 0, camStartTs = 0, camReps = 0, camTimerInt = null;
 let framingOkFrames = 0, countdownRunning = false;
@@ -1175,11 +1181,12 @@ async function camBegin() {
 
   try {
     camStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment', width: { ideal: 720 }, height: { ideal: 1280 } },
+      video: { facingMode: { ideal: camFacing }, width: { ideal: 720 }, height: { ideal: 1280 } },
       audio: false,
     });
     const video = document.getElementById('cam');
     video.srcObject = camStream;
+    video.style.transform = camFacing === 'user' ? 'scaleX(-1)' : '';
     await video.play();
     sizeOverlay();
 
@@ -1201,6 +1208,28 @@ async function camBegin() {
     setStatus('⚠️ Kamera nicht verfügbar. Nutze „Nur zählen".', true);
     document.getElementById('camHint').textContent = 'Kamera braucht HTTPS oder localhost + Freigabe.';
     renderControls();
+  }
+}
+
+/* Kamera wechseln (vorne/hinten) — funktioniert während Aufbau & Aufnahme */
+async function flipCamera() {
+  camFacing = camFacing === 'environment' ? 'user' : 'environment';
+  try {
+    if (camStream) camStream.getTracks().forEach(t => t.stop());
+    camStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: camFacing }, width: { ideal: 720 }, height: { ideal: 1280 } },
+      audio: false,
+    });
+    const video = document.getElementById('cam');
+    video.srcObject = camStream;
+    video.style.transform = camFacing === 'user' ? 'scaleX(-1)' : '';
+    await video.play();
+    sizeOverlay();
+    setStatus(camFacing === 'user' ? 'Frontkamera 🤳' : 'Rückkamera 📷', true);
+  } catch (e) {
+    console.warn(e);
+    setStatus('⚠️ Diese Kamera geht nicht — zurückgewechselt.', true);
+    camFacing = camFacing === 'environment' ? 'user' : 'environment';
   }
 }
 
@@ -1991,27 +2020,47 @@ function openShop() {
    Pilot (Wizard-of-Oz): Eltern fordern an → wir erstellen
    reports/<profilId>.json auf dem Laptop → App lädt & zeigt ihn.
    =========================================================== */
+/* Unratbarer Code pro Profil = „Schlüssel" zum Report (kein Login nötig). */
+function ensureShareCode() {
+  if (!S.progress) return null;
+  if (!S.progress.shareCode) {
+    const a = new Uint8Array(14); crypto.getRandomValues(a);
+    S.progress.shareCode = [...a].map(b => b.toString(36)).join('').slice(0, 20);
+    save();
+  }
+  return S.progress.shareCode;
+}
 async function loadReport() {
-  if (!S.activeId) return;
+  const code = ensureShareCode();
+  if (!code) return;
   try {
-    const res = await fetch('reports/' + S.activeId + '.json?t=' + Date.now(), { cache: 'no-store' });
+    const res = await fetch(BACKEND + '?code=' + encodeURIComponent(code), { cache: 'no-store' });
     if (!res.ok) return;
-    const data = await res.json();
-    const cur = S.progress.report || {};
-    // neuer Report (anderer Zeitstempel) → als „fertig" übernehmen
-    if (!cur.data || cur.data.ts !== data.ts) {
-      S.progress.report = { status: 'ready', data };
-      save();
-      renderAnalysisCard();
+    const j = await res.json();
+    if (j.status === 'ready' && j.report) {
+      const cur = S.progress.report || {};
+      // neuer Report (anderer Zeitstempel) → als „fertig" übernehmen
+      if (!cur.data || cur.data.ts !== j.report.ts) {
+        S.progress.report = { status: 'ready', data: j.report };
+        save();
+        renderAnalysisCard();
+      }
     }
-  } catch (e) { /* offline / keine Datei → ignorieren */ }
+  } catch (e) { /* offline → ignorieren */ }
 }
 function requestAnalysis() {
+  const code = ensureShareCode();
   S.progress.report = { status: 'pending', requestedAt: Date.now(), data: (S.progress.report && S.progress.report.data) || null };
   save();
   renderAnalysisCard();
   toast('Analyse angefordert 🔍');
   say('Alles klar! Deine Profi-Analyse kommt in ein paar Stunden.', { force: true });
+  if (code) {
+    fetch(BACKEND, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, profileName: S.profile.name, age: S.profile.age }),
+    }).catch(() => { /* Anfrage wird beim nächsten Öffnen erneut versucht */ });
+  }
 }
 function renderAnalysisCard() {
   const card = document.getElementById('analysisCard');
@@ -2185,6 +2234,7 @@ function wireStaticEvents() {
   document.getElementById('reviewKeep').onclick = reviewKeep;
   document.getElementById('reviewRetry').onclick = reviewRetry;
   document.getElementById('reviewDiscard').onclick = reviewDiscard;
+  document.getElementById('camFlip').onclick = flipCamera;
 
   // --- Video player ---
   document.getElementById('playerClose').onclick = closePlayer;
