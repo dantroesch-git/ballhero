@@ -80,7 +80,174 @@ const MISSIONS = [
     cues: ['Standbein neben den Ball', 'Mit dem Spann treffen', 'Fuß fest machen', 'Beide Füße üben'],
     kid: 'Schuss-Technik! Spiel den Ball gegen die Wand. Nimm ihn an. Und schieß mit den Schnürsenkeln zurück. Standbein neben den Ball!',
   },
+
+  /* ===== Große Übungs-Bibliothek ===== */
+  /* --- Ballkontrolle --- */
+  {
+    id: 'solerolls', cat: 'mastery', emoji: '🦶', title: 'Sohlen-Rollen', demo: 'trick',
+    goal: 40, unit: 'Rollen', stars: 2, skill: 'ballControl',
+    tags: ['Ballgefühl', 'Sohle'],
+    desc: 'Ball mit der Sohle hin und her rollen – ein Fuß rollt ihn zur Seite, der andere stoppt und rollt zurück.',
+    cues: ['Sohle leicht auf den Ball', 'Ball nicht wegschieben', 'Beide Füße', 'Ruhiger Rhythmus'],
+    kid: 'Sohlen-Rollen! Roll den Ball mit der Fußsohle hin und her. Ganz sanft. Der Ball bleibt bei dir.',
+  },
+  {
+    id: 'insideout', cat: 'mastery', emoji: '↩️', title: 'Innen-Außen', demo: 'insideout',
+    goal: 40, unit: 'Kontakte', stars: 2, skill: 'ballControl',
+    tags: ['Ballgefühl', 'Beide Seiten'],
+    desc: 'Ball mit EINEM Fuß antippen: einmal mit der Innenseite, einmal mit der Außenseite – im Zickzack.',
+    cues: ['Innenseite, dann Außenseite', 'Ball dicht am Fuß', 'Kleine Kontakte', 'Dann Fuß wechseln'],
+    kid: 'Innen-Außen! Tipp den Ball mit einem Fuß. Erst innen, dann außen. Zickzack. So lernst du beide Seiten!',
+  },
+  {
+    id: 'bells', cat: 'mastery', emoji: '🔔', title: 'Klingeln', demo: 'foundations',
+    goal: 50, unit: 'Kontakte', stars: 2, skill: 'ballControl',
+    tags: ['Schnelligkeit', 'Ballgefühl'],
+    desc: 'Ball ganz schnell mit den Innenseiten zwischen beiden Füßen antippen – wie eine kleine Glocke.',
+    cues: ['Ganz schnell tippen', 'Innenseiten benutzen', 'Auf den Fußballen', 'Ball ruhig halten'],
+    kid: 'Klingeln! Tipp den Ball ganz schnell zwischen deinen Füßen hin und her. Schnell, schnell, schnell!',
+  },
+  {
+    id: 'figure8', cat: 'mastery', emoji: '➰', title: 'Achterschleife', demo: 'croqueta',
+    goal: 20, unit: 'Achten', stars: 3, skill: 'ballControl',
+    tags: ['Ballführung', 'Beide Füße'],
+    desc: 'Ball in einer Acht um beide Beine führen (durch die Beine und außen herum). Toll für Ballgefühl.',
+    cues: ['Kleine Kontakte', 'Ball nah führen', 'Langsam anfangen', 'Beide Richtungen'],
+    kid: 'Achterschleife! Führ den Ball in einer Acht um deine Beine. Langsam und sauber. Wie ein Zauberer!',
+  },
+
+  /* --- Dribbling --- */
+  {
+    id: 'speeddribble', cat: 'dribbling', emoji: '💨', title: 'Tempo-Dribbling', demo: 'run',
+    goal: 30, unit: 'Sekunden', stars: 2, skill: 'dribbling',
+    tags: ['Tempo', 'Ballführung'],
+    desc: 'Mit dem Ball so schnell wie möglich geradeaus laufen – aber der Ball bleibt nah am Fuß.',
+    cues: ['Ball leicht vor dich schieben', 'Nicht zu weit', 'Mit dem Spann/Außenrist', 'Kopf ab und zu hoch'],
+    kid: 'Tempo-Dribbling! Lauf so schnell du kannst mit dem Ball. Aber er bleibt bei dir – nicht wegschießen!',
+  },
+  {
+    id: 'onevone', cat: 'dribbling', emoji: '⚔️', title: '1-gegen-1', demo: 'run',
+    goal: 15, unit: 'Antritte', stars: 3, skill: 'dribbling',
+    tags: ['Zweikampf', 'Antritt', 'Deine Stärke'],
+    desc: 'Auf ein Hütchen (Gegner) zudribbeln, kurz antäuschen und mit Tempo daran vorbei. Genau deine Stärke!',
+    cues: ['Erst langsam ran', 'Antäuschen', 'Dann explosiv vorbei', 'Ball mitnehmen'],
+    kid: 'Eins gegen eins! Dribbel auf das Hütchen zu, täusch an – und dann ganz schnell vorbei! Das kannst du gut!',
+  },
+  {
+    id: 'cutinside', cat: 'dribbling', emoji: '✂️', title: 'Innenseiten-Cut', demo: 'cut',
+    goal: 20, unit: 'Cuts', stars: 3, skill: 'dribbling',
+    tags: ['Richtungswechsel', 'Finte'],
+    desc: 'Ball antäuschen in eine Richtung und mit der Innenseite scharf in die andere ziehen (abschneiden).',
+    cues: ['Körper täuschen', 'Innenseite quer ziehen', 'Danach sofort weg', 'Beide Füße'],
+    kid: 'Cut! Tu so, als läufst du geradeaus – und zieh den Ball dann scharf zur Seite weg. Überrasch den Gegner!',
+  },
+  {
+    id: 'dragback', cat: 'dribbling', emoji: '⏪', title: 'Zurückziehen', demo: 'dragback',
+    goal: 20, unit: 'Züge', stars: 2, skill: 'dribbling',
+    tags: ['Finte', 'Sohle'],
+    desc: 'Ball mit der Sohle nach vorne stoppen und blitzschnell wieder zurückziehen – dann in eine andere Richtung.',
+    cues: ['Sohle auf den Ball', 'Zurückziehen', 'Dann drehen', 'Kopf hoch'],
+    kid: 'Zurückziehen! Stopp den Ball mit der Sohle und zieh ihn schnell zurück. So drehst du jedem davon!',
+  },
+
+  /* --- Schwacher Fuß --- */
+  {
+    id: 'weakwall', cat: 'weakfoot', emoji: '🧱', title: 'Wandpässe schwacher Fuß', demo: 'striking',
+    goal: 25, unit: 'Pässe', stars: 3, skill: 'weakFoot',
+    tags: ['Schwacher Fuß', 'Pass'],
+    desc: 'Nur mit dem schwächeren Fuß: Ball gegen die Wand passen, annehmen, wieder passen. Sauber und ruhig.',
+    cues: ['Nur schwacher Fuß', 'Innenseite', 'Standbein neben den Ball', 'Lieber langsam & sauber'],
+    kid: 'Schwacher Fuß an der Wand! Spiel den Ball nur mit dem schweren Fuß gegen die Wand. Nimm ihn an, wieder hin. Das macht dich stark!',
+  },
+  {
+    id: 'weakdribble', cat: 'weakfoot', emoji: '🦵', title: 'Dribbling schwacher Fuß', demo: 'run',
+    goal: 30, unit: 'Sekunden', stars: 3, skill: 'weakFoot',
+    tags: ['Schwacher Fuß', 'Dribbling'],
+    desc: 'Nur mit dem schwächeren Fuß dribbeln – kleine Kontakte, Innen- und Außenseite.',
+    cues: ['Nur schwacher Fuß', 'Kleine Kontakte', 'Innen und außen', 'Geduldig bleiben'],
+    kid: 'Schwacher Fuß Dribbling! Führ den Ball nur mit dem schweren Fuß. Klein und sauber. Bald ist er genauso gut!',
+  },
+
+  /* --- Koordination / Schnelligkeit --- */
+  {
+    id: 'quickfeet', cat: 'coordination', emoji: '⚡️', title: 'Schnelle Füße', demo: 'ladder',
+    goal: 30, unit: 'Sekunden', stars: 2, skill: 'coordination',
+    tags: ['Koordination', 'Fußarbeit'],
+    desc: 'Ohne Ball: ganz schnell auf der Stelle die Füße tippen (wie eine Koordinationsleiter). Auf den Fußballen.',
+    cues: ['Auf den Fußballen', 'Ganz schnell', 'Arme mitnehmen', 'Kleine Schritte'],
+    kid: 'Schnelle Füße! Tipp ganz schnell mit den Füßen auf den Boden. Wie ein Trommeln. Los, so schnell du kannst!',
+  },
+  {
+    id: 'stopball', cat: 'coordination', emoji: '🛑', title: 'Ball stoppen & Balance', demo: 'stopball',
+    goal: 20, unit: 'Stopps', stars: 2, skill: 'coordination',
+    tags: ['Balance', 'Kontrolle'],
+    desc: 'Ball rollen lassen und mit der Sohle sauber stoppen – kurz auf einem Bein die Balance halten.',
+    cues: ['Sohle sanft auf den Ball', 'Ball ganz ruhig', 'Kurz balancieren', 'Beide Füße'],
+    kid: 'Stoppen! Lass den Ball rollen und stopp ihn mit der Sohle. Ganz ruhig. Und halt kurz die Balance!',
+  },
+  {
+    id: 'sprintball', cat: 'coordination', emoji: '🏃', title: 'Antritt mit Ball', demo: 'run',
+    goal: 12, unit: 'Sprints', stars: 3, skill: 'coordination',
+    tags: ['Antritt', 'Deine Stärke'],
+    desc: 'Aus dem Stand explosiv mit dem Ball lossprinten (ein paar Meter), stoppen, zurück. Genau dein Ding!',
+    cues: ['Explosiv starten', 'Erste Schritte schnell', 'Ball mitnehmen', 'Sauber stoppen'],
+    kid: 'Antritt! Steh still – und dann sprint explosiv mit dem Ball los! Schnell wie eine Rakete. Das ist deine Stärke!',
+  },
+
+  /* --- Schuss & Pass --- */
+  {
+    id: 'wallpass', cat: 'coordination', emoji: '🎾', title: 'Passen gegen die Wand', demo: 'striking',
+    goal: 30, unit: 'Pässe', stars: 2, skill: 'coordination',
+    tags: ['Pass', 'Beide Füße'],
+    desc: 'Ball mit der Innenseite gegen die Wand passen, annehmen, wieder passen – rechts und links.',
+    cues: ['Innenseite', 'Standbein zeigt zur Wand', 'Ball ruhig treffen', 'Beide Füße'],
+    kid: 'Passen! Spiel den Ball mit der Innenseite gegen die Wand. Nimm ihn an, wieder hin. Rechts und links!',
+  },
+  {
+    id: 'shot', cat: 'coordination', emoji: '🥅', title: 'Torschuss', demo: 'striking',
+    goal: 15, unit: 'Schüsse', stars: 3, skill: 'coordination',
+    tags: ['Schuss', 'Abschluss'],
+    desc: 'Ball hinlegen, kurz Anlauf nehmen und mit dem Vollspann aufs Tor (oder eine Markierung) schießen.',
+    cues: ['Standbein neben den Ball', 'Mit dem Spann treffen', 'Fuß fest', 'Aufs Ziel schauen'],
+    kid: 'Torschuss! Leg den Ball hin, kurzer Anlauf – und schieß mit den Schnürsenkeln aufs Tor. Zeig deinen harten Schuss!',
+  },
 ];
+
+/* ===========================================================
+   AUSRÜSTUNG — jede Übung sagt, was man braucht (+ Heim-Ersatz),
+   und ob sie im Zimmer geht. Später: Set direkt in der App kaufen.
+   =========================================================== */
+const GEAR = {
+  ball:     { emoji: '⚽️', label: 'Ball',     alt: 'jeder Ball – ideal ein kleiner Futsal-/Schaumstoffball' },
+  wand:     { emoji: '🧱', label: 'Wand',      alt: 'jede glatte Wand' },
+  huetchen: { emoji: '🔺', label: 'Hütchen',   alt: 'Schuhe, Flaschen oder Dosen als Markierung' },
+  minitor:  { emoji: '🥅', label: 'Mini-Tor',  alt: '2 Schuhe oder Stühle als Torpfosten' },
+};
+/* Kauf-Sets (Stub – Bezahlung kommt später) */
+const GEAR_SHOP = [
+  { id: 'huetchen', name: 'Hütchen-Set (10×)', emoji: '🔺', price: '9,90 €' },
+  { id: 'ball',     name: 'Futsal-/Schaumstoffball', emoji: '⚽️', price: '14,90 €' },
+  { id: 'minitor',  name: 'Faltbares Mini-Tor', emoji: '🥅', price: '24,90 €' },
+];
+const GEAR_MAP = {
+  toetaps:{g:['ball'],s:'zimmer'}, foundations:{g:['ball'],s:'zimmer'},
+  slalom:{g:['ball','huetchen'],s:'platz'}, weakfoot:{g:['ball'],s:'zimmer'},
+  juggling:{g:['ball'],s:'zimmer'}, trick:{g:['ball'],s:'zimmer'},
+  croqueta:{g:['ball'],s:'zimmer'}, stepover:{g:['ball'],s:'zimmer'},
+  striking:{g:['ball','wand'],s:'zimmer'}, solerolls:{g:['ball'],s:'zimmer'},
+  insideout:{g:['ball'],s:'zimmer'}, bells:{g:['ball'],s:'zimmer'}, figure8:{g:['ball'],s:'zimmer'},
+  speeddribble:{g:['ball'],s:'platz'}, onevone:{g:['ball','huetchen'],s:'platz'},
+  cutinside:{g:['ball','huetchen'],s:'zimmer'}, dragback:{g:['ball'],s:'zimmer'},
+  weakwall:{g:['ball','wand'],s:'zimmer'}, weakdribble:{g:['ball'],s:'zimmer'},
+  quickfeet:{g:[],s:'zimmer'}, stopball:{g:['ball'],s:'zimmer'},
+  sprintball:{g:['ball'],s:'platz'}, wallpass:{g:['ball','wand'],s:'zimmer'},
+  shot:{g:['ball','huetchen','minitor'],s:'platz'},
+};
+MISSIONS.forEach(m => { const x = GEAR_MAP[m.id] || { g: ['ball'], s: 'zimmer' }; m.gear = x.g; m.space = x.s; });
+
+function ownedGear() { return (S.progress && S.progress.gear) || { ball: true, wand: true, huetchen: false, minitor: false }; }
+/* fehlende (nicht besessene) Ausrüstung einer Übung */
+function missingGear(m) { const own = ownedGear(); return (m.gear || []).filter(g => !own[g]); }
 
 /* ===========================================================
    TRAININGSSTILE — inspiriert von echten Nachwuchs-Philosophien.
@@ -88,6 +255,11 @@ const MISSIONS = [
    altersgerechte Solo-Adaptionen der öffentlich bekannten Prinzipien.
    =========================================================== */
 const ACADEMIES = [
+  {
+    id: 'personal', name: 'Mein Plan', sub: 'Für dich', emoji: '⭐️', color: '#35d07f',
+    philo: 'Enge Ballführung, Kopf hoch, schwacher Fuß – und dein starker Antritt!',
+    missions: ['toetaps', 'onevone', 'weakwall', 'speeddribble', 'cutinside', 'sprintball'],
+  },
   {
     id: 'allround', name: 'Allround', sub: 'Ausgewogen', emoji: '⚽️', color: '#ffd23f',
     philo: 'Von allem etwas – der perfekte Start.',
@@ -110,7 +282,43 @@ const ACADEMIES = [
   },
 ];
 function curAcademy() { return ACADEMIES.find(a => a.id === (S.progress && S.progress.academy)) || ACADEMIES[0]; }
-function academyMissions() { return curAcademy().missions.map(id => MISSIONS.find(m => m.id === id)).filter(Boolean); }
+function academyMissions() {
+  const a = curAcademy();
+  const ids = a.id === 'personal' ? personalPlan() : a.missions;
+  return ids.map(id => MISSIONS.find(m => m.id === id)).filter(Boolean);
+}
+
+/* ===========================================================
+   ALTERSGERECHT — Ziele & Plan hängen vom Alter des Kindes ab.
+   Grundlage: FUNdamentals-Phase, FFF/La Masia/Ajax für die Kleinen.
+   =========================================================== */
+function activeAge() { return (S.profile && S.profile.age) || 6; }
+function ageBand(age) {
+  age = age || activeAge();
+  if (age <= 4) return 'mini';   // 3–4: Spaß, Ballgewöhnung, Koordination
+  if (age <= 6) return 'g';      // 5–6: Ballmeisterei, 1-gegen-1, beide Füße, Kreativität
+  if (age <= 8) return 'f';      // 7–8: + erster Kontakt, schwacher Fuß, Kopf hoch
+  return 'older';
+}
+const AGE_FACTOR = { mini: 0.3, g: 0.55, f: 0.8, older: 1 };
+/* alters-skaliertes Ziel einer Übung (kleine, machbare Häppchen) */
+function goalFor(m) {
+  const f = AGE_FACTOR[ageBand()] || 1;
+  const minG = m.unit === 'Sekunden' ? 15 : 6;
+  return Math.max(minG, Math.round(m.goal * f / 5) * 5) || minG;
+}
+/* alters-passender „Mein Plan" (Top-Nationen-Fokus je Altersband) */
+const AGE_PLANS = {
+  mini: { philo: 'Ball lieben lernen: spielen, fühlen, Spaß.', missions: ['toetaps', 'solerolls', 'stopball', 'trick', 'insideout', 'juggling'] },
+  g:    { philo: 'Ballmeisterei, 1-gegen-1, beide Füße, kreativ — wie bei den Besten.', missions: ['toetaps', 'foundations', 'onevone', 'weakfoot', 'cutinside', 'croqueta'] },
+  f:    { philo: 'Enge Ballführung, erster Kontakt, schwacher Fuß, Kopf hoch.', missions: ['toetaps', 'foundations', 'weakwall', 'speeddribble', 'cutinside', 'onevone'] },
+  older:{ philo: 'Technik, Tempo, Zweikampf — alles zusammen.', missions: ['toetaps', 'onevone', 'weakwall', 'speeddribble', 'cutinside', 'sprintball'] },
+};
+function personalPlan() { return (AGE_PLANS[ageBand()] || AGE_PLANS.g).missions; }
+function personalPhilo() {
+  const p = (AGE_PLANS[ageBand()] || AGE_PLANS.g).philo;
+  return p + ' (für ' + activeAge() + ' Jahre)';
+}
 
 const AVATARS = ['🦊', '🦁', '🐯', '🐸', '🐵', '🐼', '🦄', '🐲', '🦖', '⚽️'];
 const SKILL_LABELS = { ballControl: 'Ballkontrolle', weakFoot: 'Schwacher Fuß', dribbling: 'Dribbling', coordination: 'Koordination' };
@@ -186,7 +394,22 @@ function say(text, opts) {
     speechSynthesis.speak(u);
   } catch (e) {}
 }
-function stopSpeaking() { try { speechSynthesis.cancel(); } catch (e) {} }
+let curClipAudio = null;
+function stopSpeaking() {
+  try { speechSynthesis.cancel(); } catch (e) {}
+  try { if (curClipAudio) { curClipAudio.pause(); curClipAudio.onended = null; curClipAudio = null; } } catch (e) {}
+}
+/* Spielt vorproduziertes Premium-Audio (voice/<key>.m4a); Fallback = Live-Stimme */
+function playClipOrSay(key, fallbackText, onend) {
+  if (!VOICE.enabled) { if (onend) onend(); return; }
+  stopSpeaking();
+  const a = new Audio('voice/' + key + '.m4a');
+  curClipAudio = a;
+  const fb = () => { if (curClipAudio === a) curClipAudio = null; say(fallbackText, { force: true, onend }); };
+  a.onended = () => { if (curClipAudio === a) curClipAudio = null; if (onend) onend(); };
+  a.onerror = fb;
+  a.play().catch(fb);
+}
 
 /* Sprachausgabe muss auf iOS durch eine echte Nutzergeste freigeschaltet werden */
 function unlockVoice() {
@@ -307,14 +530,34 @@ function load() {
         VOICE.countAloud = st.voice.countAloud !== false;
         VOICE.voiceName = st.voice.voiceName || null;
       }
+      // Migration: altes Einzelprofil -> Mehr-Profil-Struktur
+      if (!st.profiles) {
+        if (st.profile && st.progress) {
+          const id = 'p' + Date.now();
+          st.profiles = [{ id, profile: st.profile, progress: st.progress }];
+          st.activeId = id;
+        } else {
+          st.profiles = []; st.activeId = null;
+        }
+      }
       return st;
     }
   } catch (e) {}
-  return { profile: null, progress: null };
+  return { profiles: [], activeId: null, profile: null, progress: null };
 }
+/* S.profile / S.progress zeigen immer aufs aktive Profil (Referenzen in profiles[]) */
+function bindActive() {
+  const e = S.profiles.find(x => x.id === S.activeId);
+  S.profile = e ? e.profile : null;
+  S.progress = e ? e.progress : null;
+}
+function activeEntry() { return S.profiles.find(x => x.id === S.activeId) || null; }
 function save() {
   try {
     S.voice = { enabled: VOICE.enabled, countAloud: VOICE.countAloud, voiceName: VOICE.voiceName };
+    // aktives Profil im Array aktuell halten (falls Referenz mal ersetzt wurde)
+    const e = activeEntry();
+    if (e) { e.profile = S.profile; e.progress = S.progress; }
     localStorage.setItem(LS_KEY, JSON.stringify(S));
   } catch (e) {}
 }
@@ -329,7 +572,9 @@ function freshProgress() {
     daily: {},         // dateKey -> contacts
     badges: {},        // badgeId -> dateKey earned
     videoCount: 0,
-    academy: 'allround',
+    academy: 'personal',
+    planSet: true,
+    gear: { ball: true, wand: true, huetchen: false, minitor: false },
   };
 }
 
@@ -339,6 +584,9 @@ function migrateProgress(p) {
   if (!p.badges) p.badges = {};
   if (p.videoCount === undefined) p.videoCount = 0;
   if (!p.academy) p.academy = 'allround';
+  if (!p.gear) p.gear = { ball: true, wand: true, huetchen: false, minitor: false };
+  // Persönlichen Plan einmalig aktiv setzen (aus der Video-Analyse)
+  if (!p.planSet) { p.academy = 'personal'; p.planSet = true; }
 }
 
 /* ---------------- Date helpers ---------------- */
@@ -347,11 +595,11 @@ function pad(n) { return n < 10 ? '0' + n : '' + n; }
 function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
 
 /* ---------------- Screen router ---------------- */
-const screens = ['welcome', 'home', 'mission', 'camera', 'manual', 'progress', 'parent'];
+const screens = ['welcome', 'home', 'mission', 'camera', 'manual', 'library', 'progress', 'parent'];
 function go(name) {
   screens.forEach(s => document.getElementById('screen-' + s).classList.toggle('active', s === name));
   const nav = document.getElementById('nav');
-  const showNav = ['home', 'progress', 'parent'].includes(name);
+  const showNav = ['home', 'library', 'progress', 'parent'].includes(name);
   nav.classList.toggle('hidden', !showNav);
   if (showNav) document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('active', b.dataset.screen === name));
   window.scrollTo(0, 0);
@@ -361,6 +609,7 @@ function go(name) {
 function boot() {
   buildAvatarPicker();
   wireStaticEvents();
+  bindActive();
   if (S.profile && S.progress) {
     ensureDaily();
     go('home');
@@ -408,14 +657,81 @@ function buildAvatarPicker() {
 function createProfile() {
   const name = document.getElementById('kidName').value.trim() || 'Champion';
   const age = parseInt(document.getElementById('kidAge').value, 10) || 6;
-  S.profile = { name, age, avatar: selectedAvatar, createdAt: todayKey() };
-  S.progress = freshProgress();
+  const id = 'p' + Date.now();
+  const entry = { id, profile: { name, age, avatar: selectedAvatar, createdAt: todayKey() }, progress: freshProgress() };
+  S.profiles.push(entry);
+  S.activeId = id;
+  bindActive();
   save();
   ensureDaily();
+  // Eingabefelder zurücksetzen
+  document.getElementById('kidName').value = '';
+  document.getElementById('kidAge').value = '';
   renderHome(); renderProgress(); renderParent();
   go('home');
   toast('Willkommen, ' + name + '! ⚽️');
   say('Hallo ' + name + '! Such dir eine Übung aus.', { force: true });
+}
+
+/* Zu einem anderen Profil wechseln */
+function switchToProfile(id) {
+  if (id === S.activeId) { go('home'); return; }
+  S.activeId = id;
+  bindActive();
+  ensureDaily();
+  save();
+  renderHome(); renderProgress(); renderParent();
+  go('home');
+  greetHome();
+}
+
+/* Profil-Auswahl anzeigen (Kinder-Kacheln + „neu") */
+function renderProfileChooser() {
+  const wrap = document.getElementById('profileList');
+  if (!wrap) return;
+  wrap.innerHTML = S.profiles.map(e => {
+    const rk = rankFor(e.progress.xp || 0);
+    return '<div class="pf-card' + (e.id === S.activeId ? ' active' : '') + '" data-id="' + e.id + '">' +
+      '<div class="pf-avatar">' + (e.profile.avatar || '⚽️') + '</div>' +
+      '<div class="pf-name">' + e.profile.name + '</div>' +
+      '<div class="pf-sub">' + e.profile.age + ' J. · ' + rk.rank.emoji + ' ' + rk.rank.name + '</div>' +
+      '<button class="pf-del" data-del="' + e.id + '" title="Löschen">✕</button></div>';
+  }).join('') +
+    '<div class="pf-card pf-add" data-add="1"><div class="pf-avatar">➕</div><div class="pf-name">Neues Kind</div></div>';
+
+  wrap.querySelectorAll('.pf-card').forEach(el => {
+    el.onclick = (ev) => {
+      if (ev.target.dataset.del) { deleteProfile(ev.target.dataset.del); return; }
+      if (el.dataset.add) { addProfileFlow(); return; }
+      sfx.pop(); haptic(14);
+      document.getElementById('profileChooser').classList.remove('show');
+      switchToProfile(el.dataset.id);
+    };
+  });
+}
+function openProfileChooser() {
+  renderProfileChooser();
+  document.getElementById('profileChooser').classList.add('show');
+}
+function addProfileFlow() {
+  document.getElementById('profileChooser').classList.remove('show');
+  document.getElementById('kidName').value = '';
+  document.getElementById('kidAge').value = '';
+  selectedAvatar = AVATARS[0];
+  buildAvatarPicker();
+  go('welcome');
+}
+function deleteProfile(id) {
+  const e = S.profiles.find(x => x.id === id);
+  if (!e) return;
+  if (!confirm('Profil „' + e.profile.name + '" wirklich löschen? Alle Daten dieses Kindes gehen verloren.')) return;
+  S.profiles = S.profiles.filter(x => x.id !== id);
+  if (S.activeId === id) S.activeId = S.profiles.length ? S.profiles[0].id : null;
+  bindActive();
+  save();
+  if (!S.profiles.length) { document.getElementById('profileChooser').classList.remove('show'); go('welcome'); return; }
+  renderProfileChooser();
+  renderHome(); renderProgress(); renderParent();
 }
 
 /* Begrüßung auf dem Start-Screen — sagt, was zu tun ist */
@@ -451,7 +767,7 @@ function renderAcademyRow() {
       say(a.name + '-Stil. ' + a.philo, { force: true });
     };
   });
-  document.getElementById('academyPhilo').textContent = '„' + cur.philo + '"';
+  document.getElementById('academyPhilo').textContent = '„' + (cur.id === 'personal' ? personalPhilo() : cur.philo) + '"';
 }
 
 function renderHome() {
@@ -487,40 +803,184 @@ function renderHome() {
     el.innerHTML =
       '<div class="emoji">' + m.emoji + '</div>' +
       '<div class="body"><div class="title">' + m.title + '</div>' +
-      '<div class="meta">' + m.goal + ' ' + m.unit + '</div></div>' +
+      '<div class="meta">' + goalFor(m) + ' ' + m.unit + '</div></div>' +
       (isDone ? '<div class="check">✓</div>' : '<div class="stars">+' + m.stars + '⭐</div>');
-    el.onclick = () => { sfx.pop(); haptic(14); openMission(m.id); };
+    el.onclick = () => { sfx.pop(); haptic(14); openMission(m.id, 'home'); };
     list.appendChild(el);
   });
 
   document.getElementById('allDoneCard').style.display = doneCount === missions.length ? 'block' : 'none';
 }
 
+/* ---------------- Übungs-Bibliothek ---------------- */
+const SKILL_GROUPS = [
+  { skill: 'ballControl',  title: '⚽️ Ballkontrolle' },
+  { skill: 'dribbling',    title: '🏃 Dribbling & 1-gegen-1' },
+  { skill: 'weakFoot',     title: '🦶 Schwacher Fuß' },
+  { skill: 'coordination', title: '⚡️ Koordination, Schuss & Antritt' },
+];
+let libFilter = 'all';
+function libMatches(m) {
+  if (libFilter === 'zimmer') return m.space === 'zimmer';
+  if (libFilter === 'mine') return missingGear(m).length === 0;
+  return true;
+}
+function renderLibrary() {
+  const host = document.getElementById('libraryList');
+  if (!host) return;
+  const planIds = curAcademy().missions;
+  const gearBadge = m => (m.gear || []).map(g => GEAR[g] ? GEAR[g].emoji : '').join('') +
+    (m.space === 'zimmer' ? ' 🏠' : ' 📏');
+  let any = false;
+  host.innerHTML = SKILL_GROUPS.map(g => {
+    const drills = MISSIONS.filter(m => m.skill === g.skill && libMatches(m));
+    if (!drills.length) return '';
+    any = true;
+    return '<div class="lib-group"><h3>' + g.title + ' <span class="small">(' + drills.length + ')</span></h3>' +
+      '<div class="lib-grid">' + drills.map(m => {
+        const inPlan = planIds.includes(m.id);
+        const need = missingGear(m).length ? ' need' : '';
+        return '<div class="lib-card' + need + '" data-id="' + m.id + '">' +
+          (inPlan ? '<div class="lib-star">⭐️</div>' : '') +
+          '<div class="lib-emoji">' + m.emoji + '</div>' +
+          '<div class="lib-title">' + m.title + '</div>' +
+          '<div class="lib-gear">' + gearBadge(m) + '</div></div>';
+      }).join('') + '</div></div>';
+  }).join('');
+  if (!any) host.innerHTML = '<p class="small center" style="margin-top:24px">Keine Übung für diesen Filter. Unter <b>Eltern → Ausrüstung</b> anpassen, was ihr habt.</p>';
+  host.querySelectorAll('.lib-card').forEach(el => {
+    el.onclick = () => { sfx.pop(); haptic(14); openMission(el.dataset.id, 'library'); };
+  });
+}
+
 /* ---------------- Mission detail ---------------- */
 let currentMission = null;
-function openMission(id) {
+let missionFrom = 'home';   // wohin „Zurück" führt
+function openMission(id, from) {
+  if (from) missionFrom = from;
   const m = MISSIONS.find(x => x.id === id);
   currentMission = m;
 
   // Animierte Demo — erklärt die Bewegung ohne ein Wort
-  document.getElementById('mDemo').innerHTML = demoFor(m.id);
+  document.getElementById('mDemo').innerHTML = demoFor(m.demo || m.id);
 
   document.getElementById('mDetailTitle').textContent = m.title;
-  document.getElementById('mGoalNum').textContent = m.goal;
+  document.getElementById('mGoalNum').textContent = goalFor(m);
   document.getElementById('mGoalUnit').textContent = m.unit;
   // Ziel zusätzlich als Punktreihe, damit "wie viel" auch ohne Zahlenverständnis ankommt
-  const dots = Math.min(20, Math.max(5, Math.round(m.goal / 10)));
+  const dots = Math.min(20, Math.max(5, Math.round(goalFor(m) / 10)));
   document.getElementById('mGoalDots').innerHTML = '<span></span>'.repeat(dots);
 
   const tags = document.getElementById('mDetailTags');
   tags.innerHTML = m.tags.map(t => '<span class="tag">' + t + '</span>').join('') +
-    '<span class="tag">🎯 ' + m.goal + ' ' + m.unit + '</span>';
+    '<span class="tag">🎯 ' + goalFor(m) + ' ' + m.unit + '</span>';
   document.getElementById('mDetailDesc').textContent = m.desc;
   document.getElementById('mDetailCues').innerHTML =
     m.cues.map(c => '<li><span class="dot">›</span>' + c + '</li>').join('');
 
+  renderGearBox(m);
+  renderMissionVideos(m);
+
   go('mission');
   narrateMission();
+}
+
+/* ===========================================================
+   ECHTE BEISPIEL-VIDEOS (YouTube-Einbettung, kuratiert)
+   Legal: nur einbetten (offizieller Player), nie herunterladen.
+   =========================================================== */
+const MISSION_VIDEOS = {
+  toetaps: [
+    { id: 'KaktBhbJUyg', label: 'Ball Mastery (U8–U12)' },
+  ],
+  foundations: [
+    { id: 'p0xM1rLLC9o', label: 'How To: Foundations' },
+    { id: 'LfC-nTxvGV0', label: 'Innen/Außen-Touch' },
+  ],
+  croqueta: [
+    { id: 'bYPmNKTHYNw', label: 'How to (Tom Harris)' },
+    { id: 'vKmVcf1NQ4A', label: '3 Schritte (FDB)' },
+    { id: 'IFUJxXvPg7Q', label: 'Messi in echt' },
+  ],
+  stepover: [
+    { id: 'y1UJrlWu7J8', label: 'Schritt für Schritt' },
+  ],
+  cutinside: [
+    { id: '60nDcFWaa8I', label: 'Inside Cut (U8–U9)' },
+    { id: 'nt4ljHSzUfs', label: '5 einfache Moves' },
+  ],
+  dragback: [
+    { id: 'N2tL3QMfvLE', label: 'Für Kids' },
+    { id: 'YpuAC0whCY4', label: 'Drag-Back-Turn' },
+  ],
+  slalom: [
+    { id: 'XCoSPAADfXE', label: 'Cone Maze (U8–U12)' },
+    { id: 'hXcgw7U6qCw', label: 'Close Control (U9–U12)' },
+  ],
+  juggling: [
+    { id: 'SzZ7Ecql-sg', label: 'Basics für Kids' },
+    { id: 'uCwSLF6f5y8', label: 'Super einfach' },
+  ],
+  shot: [
+    { id: '4zn2D__2jwQ', label: 'Mit dem Spann (MOJO)' },
+    { id: 'DOsbXTR-XBE', label: 'Schritt für Schritt' },
+  ],
+};
+function renderMissionVideos(m) {
+  const box = document.getElementById('mVideos');
+  if (!box) return;
+  const vids = MISSION_VIDEOS[m.id] || [];
+  if (!vids.length) { box.innerHTML = ''; return; }
+  box.innerHTML = '<div class="vids-head">🎬 So sieht\'s echt aus</div><div class="vids-row">' +
+    vids.map(v => '<div class="vid-thumb" data-yt="' + v.id + '" data-label="' + v.label.replace(/"/g, '') + '">' +
+      '<img loading="lazy" src="https://i.ytimg.com/vi/' + v.id + '/hqdefault.jpg" alt="">' +
+      '<span class="vt-play">▶︎</span><span class="vt-label">' + v.label + '</span></div>').join('') +
+    '</div>';
+  box.querySelectorAll('.vid-thumb').forEach(el => {
+    el.onclick = () => { sfx.pop(); haptic(12); openYt(el.dataset.yt, el.dataset.label); };
+  });
+}
+function openYt(id, label) {
+  stopSpeaking();
+  document.getElementById('ytTitle').textContent = '🎬 ' + (label || 'Beispiel');
+  document.getElementById('ytFrame').src =
+    'https://www.youtube-nocookie.com/embed/' + id + '?rel=0&modestbranding=1&playsinline=1&autoplay=1';
+  document.getElementById('ytPlayer').classList.add('show');
+}
+function closeYt() {
+  document.getElementById('ytFrame').src = '';
+  document.getElementById('ytPlayer').classList.remove('show');
+}
+
+/* „Du brauchst" — Ausrüstung mit Heim-Ersatz + Kauf-Hinweis */
+function renderGearBox(m) {
+  const box = document.getElementById('mGear');
+  if (!box) return;
+  const gear = m.gear || [];
+  const roomTag = m.space === 'zimmer'
+    ? '<span class="gear-room ok">🏠 geht im Zimmer</span>'
+    : '<span class="gear-room big">📏 braucht etwas Platz (Flur/Garten)</span>';
+  if (!gear.length) {
+    box.innerHTML = '<div class="gear-head">Du brauchst: <b>nichts</b> 🎉</div>' + roomTag;
+    return;
+  }
+  const own = ownedGear();
+  const items = gear.map(g => {
+    const it = GEAR[g]; if (!it) return '';
+    const have = own[g];
+    return '<div class="gear-item' + (have ? ' have' : '') + '">' +
+      '<span class="gi-emoji">' + it.emoji + '</span>' +
+      '<div class="gi-body"><div class="gi-label">' + it.label + (have ? ' ✓' : '') + '</div>' +
+      (have ? '' : '<div class="gi-alt">zuhause: ' + it.alt + '</div>') + '</div></div>';
+  }).join('');
+  const missing = missingGear(m);
+  const buy = missing.filter(g => GEAR_SHOP.some(s => s.id === g));
+  const buyBtn = buy.length
+    ? '<button class="btn secondary sm mt" id="mGearBuy">🛒 Fehlende Ausrüstung (bald kaufbar)</button>'
+    : '';
+  box.innerHTML = '<div class="gear-head">Du brauchst:</div><div class="gear-list">' + items + '</div>' + roomTag + buyBtn;
+  const bb = document.getElementById('mGearBuy');
+  if (bb) bb.onclick = () => openShop();
 }
 
 /* Übung laut erklären + Knopf visuell mitlaufen lassen */
@@ -528,9 +988,11 @@ function narrateMission() {
   const btn = document.getElementById('mListen');
   if (!VOICE.enabled) return;
   btn.classList.add('speaking');
-  say(currentMission.kid, { force: true, onend: () => btn.classList.remove('speaking') });
-  // Sicherheitsnetz, falls onend nicht feuert (kommt auf manchen Geräten vor)
-  setTimeout(() => btn.classList.remove('speaking'), 14000);
+  const done = () => btn.classList.remove('speaking');
+  // Premium-Audio bevorzugen, sonst Live-Stimme
+  playClipOrSay('kid_' + currentMission.id, currentMission.kid, done);
+  // Sicherheitsnetz, falls onended nicht feuert
+  setTimeout(done, 15000);
 }
 
 /* ---------------- Manual counting ---------------- */
@@ -538,16 +1000,16 @@ let manualCount = 0;
 function openManual() {
   const m = currentMission;
   manualCount = 0;
-  document.getElementById('manDemo').innerHTML = demoFor(m.id);
+  document.getElementById('manDemo').innerHTML = demoFor(m.demo || m.id);
   document.getElementById('manTitle').textContent = m.title;
-  document.getElementById('manGoal').textContent = 'Ziel: ' + m.goal + ' ' + m.unit;
+  document.getElementById('manGoal').textContent = 'Ziel: ' + goalFor(m) + ' ' + m.unit;
   updateManual();
   go('manual');
   say('Tippe auf das Plus, wenn du es gemacht hast.', { force: true });
 }
 function updateManual() {
   document.getElementById('manCount').textContent = manualCount;
-  const pct = Math.min(100, Math.round(manualCount / currentMission.goal * 100));
+  const pct = Math.min(100, Math.round(manualCount / goalFor(currentMission) * 100));
   document.getElementById('manBar').style.width = pct + '%';
 }
 
@@ -992,6 +1454,8 @@ async function reviewKeep() {
         id: 'v' + Date.now(),
         ts: Date.now(),
         date: todayKey(),
+        profileId: S.activeId,
+        profileName: S.profile ? S.profile.name : '',
         missionId: currentMission.id,
         title: currentMission.title,
         emoji: currentMission.emoji,
@@ -1097,6 +1561,8 @@ async function renderVideoList() {
   if (!list) return;
   let vids = [];
   try { vids = await dbAll(); } catch (e) {}
+  // nur Videos des aktiven Kindes (Alt-Videos ohne profileId zeigen wir überall)
+  vids = vids.filter(v => !v.profileId || v.profileId === S.activeId);
   if (!vids.length) {
     list.innerHTML = '<p class="small">Noch keine Videos. Nimm eine Übung mit der Kamera auf.</p>';
     meta.textContent = '';
@@ -1121,22 +1587,67 @@ function fmtDate(key) {
   return d + '.' + m + '.' + y;
 }
 
-let playingId = null, playingUrl = null;
+let playingId = null, playingUrl = null, playingBlob = null, playingMeta = null;
 async function playVideo(id) {
   const vids = await dbAll();
   const v = vids.find(x => x.id === id);
   if (!v || !v.blob) return;
   playingId = id;
+  playingBlob = v.blob;
+  playingMeta = { title: v.title, date: v.date };
   if (playingUrl) URL.revokeObjectURL(playingUrl);
   playingUrl = URL.createObjectURL(v.blob);
   document.getElementById('playerTitle').textContent = v.emoji + ' ' + v.title + ' · ' + fmtDate(v.date);
   document.getElementById('playerVideo').src = playingUrl;
+  document.getElementById('playerDlHint').textContent = '';
   document.getElementById('player').classList.add('show');
+}
+
+/* Video speichern — zuerst direkt in den BallHero-Ordner (lokaler Server),
+   sonst als normaler Download (Handy / deployte Version). */
+function videoFileName() {
+  const type = playingBlob.type || '';
+  const ext = type.includes('mp4') ? 'mp4' : (type.includes('webm') ? 'webm' : 'mp4');
+  const safe = (playingMeta && playingMeta.title ? playingMeta.title : 'Uebung').replace(/[^\w]+/g, '');
+  return 'BallHero_' + safe + '_' + (playingMeta ? playingMeta.date : todayKey()) + '.' + ext;
+}
+async function downloadPlaying() {
+  if (!playingBlob) return;
+  const name = videoFileName();
+  const hint = document.getElementById('playerDlHint');
+  hint.textContent = 'Speichere…';
+  // 1) Versuch: direkt in den BallHero-Ordner (aufnahmen/) auf dem Mac
+  try {
+    const res = await fetch('/save?name=' + encodeURIComponent(name), {
+      method: 'POST',
+      headers: { 'Content-Type': playingBlob.type || 'video/mp4' },
+      body: playingBlob,
+    });
+    if (res.ok) {
+      const j = await res.json().catch(() => ({}));
+      hint.textContent = '✅ Gespeichert im BallHero-Ordner: aufnahmen/' + (j.name || name);
+      haptic(14);
+      return;
+    }
+  } catch (e) { /* kein lokaler Server → Download-Fallback */ }
+  // 2) Fallback: normaler Browser-Download
+  try {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(playingBlob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    hint.textContent = 'Als „' + name + '" in Downloads gespeichert. Am Handy: per AirDrop an den Mac.';
+  } catch (e) {
+    hint.textContent = 'Speichern hat nicht geklappt.';
+  }
 }
 function closePlayer() {
   const v = document.getElementById('playerVideo');
   v.pause(); v.removeAttribute('src');
   if (playingUrl) { URL.revokeObjectURL(playingUrl); playingUrl = null; }
+  playingBlob = null;
   document.getElementById('player').classList.remove('show');
 }
 async function deletePlaying() {
@@ -1146,6 +1657,109 @@ async function deletePlaying() {
   closePlayer();
   renderVideoList();
   toast('Video gelöscht');
+}
+
+/* ===========================================================
+   ANALYSE-WERKZEUG (Hudl-Technique-Stil)
+   Zeitlupe · Bild-für-Bild · aufs Video zeichnen (Telestrator)
+   =========================================================== */
+const AN = { url: null, dur: 0, speeds: [1, 0.5, 0.25], si: 0, drawing: false,
+  colors: ['#ff5a5a', '#ffd23f', '#35d07f', '#4d8bff', '#ffffff'], ci: 0,
+  strokes: [], cur: null, dpr: 1, raf: null };
+const FRAME_STEP = 1 / 30;
+
+function openAnalyzer() {
+  if (!playingBlob) return;
+  const v = document.getElementById('anVideo');
+  if (AN.url) URL.revokeObjectURL(AN.url);
+  AN.url = URL.createObjectURL(playingBlob);
+  v.src = AN.url;
+  v.playbackRate = 1; AN.si = 0; document.getElementById('anSpeed').textContent = '1×';
+  AN.strokes = []; AN.cur = null;
+  AN.drawing = false; document.getElementById('anDraw').classList.remove('on');
+  AN.ci = 0; document.getElementById('anColorDot').style.background = AN.colors[0];
+  document.getElementById('anTitle').textContent = playingMeta ? (playingMeta.title || 'Analyse') : 'Analyse';
+  document.getElementById('anPlay').textContent = '▶︎';
+  document.getElementById('analyzer').classList.add('show');
+  v.onloadedmetadata = () => { AN.dur = v.duration || 0; sizeAnCanvas(); redrawAn(); };
+  v.ontimeupdate = () => {
+    if (AN.dur) document.getElementById('anScrub').value = Math.round(v.currentTime / AN.dur * 1000);
+    document.getElementById('anTime').textContent = v.currentTime.toFixed(2) + 's';
+  };
+  v.onended = () => { document.getElementById('anPlay').textContent = '▶︎'; };
+  setTimeout(sizeAnCanvas, 60);
+}
+function closeAnalyzer() {
+  const v = document.getElementById('anVideo');
+  v.pause(); v.removeAttribute('src'); v.load();
+  if (AN.url) { URL.revokeObjectURL(AN.url); AN.url = null; }
+  document.getElementById('analyzer').classList.remove('show');
+}
+function sizeAnCanvas() {
+  const c = document.getElementById('anCanvas'), stage = document.getElementById('anStage');
+  const w = stage.clientWidth, h = stage.clientHeight;
+  if (!w || !h) return;
+  AN.dpr = window.devicePixelRatio || 1;
+  c.width = Math.round(w * AN.dpr); c.height = Math.round(h * AN.dpr);
+  const ctx = c.getContext('2d'); ctx.setTransform(AN.dpr, 0, 0, AN.dpr, 0, 0);
+  redrawAn();
+}
+function redrawAn() {
+  const c = document.getElementById('anCanvas'); if (!c) return;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const all = AN.cur ? AN.strokes.concat([AN.cur]) : AN.strokes;
+  all.forEach(s => {
+    if (s.points.length < 2) return;
+    ctx.strokeStyle = s.color; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(s.points[0].x, s.points[0].y);
+    for (let i = 1; i < s.points.length; i++) ctx.lineTo(s.points[i].x, s.points[i].y);
+    ctx.stroke();
+  });
+}
+function anPoint(ev) {
+  const c = document.getElementById('anCanvas'); const r = c.getBoundingClientRect();
+  const p = ev.touches ? ev.touches[0] : ev;
+  return { x: p.clientX - r.left, y: p.clientY - r.top };
+}
+function anStepFrame(dir) {
+  const v = document.getElementById('anVideo');
+  v.pause(); document.getElementById('anPlay').textContent = '▶︎';
+  v.currentTime = Math.max(0, Math.min(AN.dur || 0, v.currentTime + dir * FRAME_STEP));
+}
+function wireAnalyzer() {
+  const v = document.getElementById('anVideo'), c = document.getElementById('anCanvas');
+  document.getElementById('anClose').onclick = closeAnalyzer;
+  document.getElementById('anBack').onclick = () => anStepFrame(-1);
+  document.getElementById('anFwd').onclick = () => anStepFrame(1);
+  document.getElementById('anPlay').onclick = () => {
+    if (v.paused) { v.play(); document.getElementById('anPlay').textContent = '❚❚'; }
+    else { v.pause(); document.getElementById('anPlay').textContent = '▶︎'; }
+  };
+  document.getElementById('anSpeed').onclick = () => {
+    AN.si = (AN.si + 1) % AN.speeds.length; v.playbackRate = AN.speeds[AN.si];
+    document.getElementById('anSpeed').textContent = AN.speeds[AN.si] + '×';
+  };
+  document.getElementById('anDraw').onclick = () => {
+    AN.drawing = !AN.drawing;
+    document.getElementById('anDraw').classList.toggle('on', AN.drawing);
+  };
+  document.getElementById('anColor').onclick = () => {
+    AN.ci = (AN.ci + 1) % AN.colors.length;
+    document.getElementById('anColorDot').style.background = AN.colors[AN.ci];
+  };
+  document.getElementById('anClear').onclick = () => { AN.strokes = []; AN.cur = null; redrawAn(); };
+  document.getElementById('anScrub').oninput = (e) => {
+    if (AN.dur) { v.pause(); document.getElementById('anPlay').textContent = '▶︎'; v.currentTime = e.target.value / 1000 * AN.dur; }
+  };
+  // Zeichnen per Pointer
+  const start = (ev) => { if (!AN.drawing) return; ev.preventDefault(); AN.cur = { color: AN.colors[AN.ci], points: [anPoint(ev)] }; };
+  const move = (ev) => { if (!AN.drawing || !AN.cur) return; ev.preventDefault(); AN.cur.points.push(anPoint(ev)); redrawAn(); };
+  const end = () => { if (AN.cur) { AN.strokes.push(AN.cur); AN.cur = null; redrawAn(); } };
+  c.addEventListener('pointerdown', start); c.addEventListener('pointermove', move);
+  c.addEventListener('pointerup', end); c.addEventListener('pointerleave', end);
+  window.addEventListener('resize', sizeAnCanvas);
 }
 
 /* ---------------- Complete mission ---------------- */
@@ -1164,7 +1778,7 @@ function completeMission(m, reps, seconds, extra) {
 
   // Skill bump (diminishing)
   const cur = p.skills[m.skill] || 0;
-  const gain = Math.max(1, Math.round((reps / m.goal) * 8 * (1 - cur / 130)));
+  const gain = Math.max(1, Math.round((reps / goalFor(m)) * 8 * (1 - cur / 130)));
   p.skills[m.skill] = Math.min(100, cur + gain);
 
   // Streak (vor der Badge-Prüfung, damit streak-Badges sofort greifen)
@@ -1254,7 +1868,7 @@ function buildFeedback(m, reps, extra) {
     else if (extra.headUpPct > 55) tips.push('👀 Toll, dein Kopf war oft oben!');
   }
   if (m.skill === 'weakFoot') tips.push('🦶 Klasse, dass du den schwachen Fuß trainierst!');
-  if (m.cat === 'mastery' && reps >= m.goal) tips.push('⚽️ Ziel erreicht — sehr sauber!');
+  if (m.cat === 'mastery' && reps >= goalFor(m)) tips.push('⚽️ Ziel erreicht — sehr sauber!');
   if (!tips.length) tips.push(m.cues[0] + ' — dranbleiben!');
   return msg + '<br><span class="small">' + tips.slice(0, 2).join('<br>') + '</span>';
 }
@@ -1330,10 +1944,44 @@ function renderParent() {
 
   renderVideoList();
   renderVoicePicker();
+  renderGearSettings();
 
   // insight + plan
   document.getElementById('parentInsight').textContent = parentInsight(weekContacts, weekSessions);
   document.getElementById('weekPlan').innerHTML = weekPlan();
+}
+
+/* Ausrüstung besitzen/verwalten + Set-Shop (Stub) */
+function renderGearSettings() {
+  const ownWrap = document.getElementById('gearOwn');
+  const shopWrap = document.getElementById('gearShop');
+  if (!ownWrap) return;
+  const own = ownedGear();
+  ownWrap.innerHTML = Object.keys(GEAR).map(g => {
+    const it = GEAR[g];
+    return '<label class="toggle"><input type="checkbox" data-gear="' + g + '"' + (own[g] ? ' checked' : '') + '>' +
+      '<span>' + it.emoji + ' ' + it.label + ' <span class="small">(' + it.alt + ')</span></span></label>';
+  }).join('');
+  ownWrap.querySelectorAll('input[data-gear]').forEach(inp => {
+    inp.onchange = () => {
+      if (!S.progress.gear) S.progress.gear = {};
+      S.progress.gear[inp.dataset.gear] = inp.checked;
+      save();
+    };
+  });
+  if (shopWrap) shopWrap.innerHTML = GEAR_SHOP.map(s =>
+    '<div class="shop-item"><span class="shop-emoji">' + s.emoji + '</span>' +
+    '<div class="shop-body"><div class="shop-name">' + s.name + '</div>' +
+    '<div class="small">' + s.price + '</div></div>' +
+    '<button class="btn secondary sm shop-buy" data-buy="' + s.id + '">Bald</button></div>'
+  ).join('');
+  if (shopWrap) shopWrap.querySelectorAll('.shop-buy').forEach(b => {
+    b.onclick = () => toast('Set-Shop kommt bald — bis dahin Ersatz-Tipp nutzen 🙂');
+  });
+}
+function openShop() {
+  go('parent'); renderParent();
+  setTimeout(() => { const el = document.getElementById('gearShop'); if (el) el.scrollIntoView({ block: 'center' }); }, 60);
 }
 
 /* Stimmen-Auswahl im Eltern-Bereich: Liste + Test + Geräte-Tipp */
@@ -1413,14 +2061,13 @@ function weekPlan() {
 function resetAll() {
   if (!confirm('Wirklich ALLE Daten löschen? Das kann nicht rückgängig gemacht werden.')) return;
   localStorage.removeItem(LS_KEY);
-  S = { profile: null, progress: null };
+  S = { profiles: [], activeId: null, profile: null, progress: null };
   document.getElementById('kidName').value = '';
   document.getElementById('kidAge').value = '';
   go('welcome');
 }
 function switchKid() {
-  if (!confirm('Neues Profil anlegen? Das aktuelle Profil wird ersetzt.')) return;
-  go('welcome');
+  openProfileChooser();
 }
 
 /* ---------------- Toast ---------------- */
@@ -1436,7 +2083,7 @@ function toast(msg) {
 function wireStaticEvents() {
   document.getElementById('createProfile').onclick = createProfile;
 
-  document.getElementById('missionBack').onclick = () => { stopSpeaking(); go('home'); };
+  document.getElementById('missionBack').onclick = () => { stopSpeaking(); go(missionFrom); };
   document.getElementById('startCamera').onclick = () => { stopSpeaking(); openCamera(); };
   document.getElementById('startManual').onclick = () => { stopSpeaking(); openManual(); };
   document.getElementById('mListen').onclick = narrateMission;
@@ -1457,12 +2104,16 @@ function wireStaticEvents() {
   // --- Video player ---
   document.getElementById('playerClose').onclick = closePlayer;
   document.getElementById('playerDelete').onclick = deletePlaying;
+  document.getElementById('playerDownload').onclick = downloadPlaying;
+  document.getElementById('playerAnalyze').onclick = openAnalyzer;
+  wireAnalyzer();
+  document.getElementById('ytClose').onclick = closeYt;
 
   document.getElementById('manualBack').onclick = () => { stopSpeaking(); go('mission'); };
   document.getElementById('manPlus').onclick = () => { manualCount++; updateManual(); countAloud(manualCount); sfx.tap(); haptic(12); };
   document.getElementById('manMinus').onclick = () => { manualCount = Math.max(0, manualCount - 1); updateManual(); };
   document.getElementById('manDone').onclick = () => {
-    const reps = manualCount || currentMission.goal;
+    const reps = manualCount || goalFor(currentMission);
     const secs = Math.max(20, Math.round(reps * 0.6));
     completeMission(currentMission, reps, secs, { hadPose: false });
   };
@@ -1480,6 +2131,7 @@ function wireStaticEvents() {
       const s = b.dataset.screen;
       if (s === 'progress') renderProgress();
       if (s === 'parent') renderParent();
+      if (s === 'library') renderLibrary();
       go(s);
       if (s === 'home') greetHome();
     };
@@ -1517,6 +2169,21 @@ function wireStaticEvents() {
 
   document.getElementById('switchKid').onclick = switchKid;
   document.getElementById('resetAll').onclick = resetAll;
+
+  // Bibliothek-Filter (Alle / Zimmer / Meine Ausrüstung)
+  document.querySelectorAll('#libFilter .lf-chip').forEach(chip => {
+    chip.onclick = () => {
+      libFilter = chip.dataset.filter;
+      document.querySelectorAll('#libFilter .lf-chip').forEach(c => c.classList.toggle('active', c === chip));
+      sfx.pop(); renderLibrary();
+    };
+  });
+
+  // Profil-Wähler: Avatar antippen + Schließen
+  const homeAv = document.getElementById('homeAvatar');
+  if (homeAv) homeAv.onclick = () => { sfx.pop(); haptic(12); openProfileChooser(); };
+  const pfClose = document.getElementById('profileClose');
+  if (pfClose) pfClose.onclick = () => document.getElementById('profileChooser').classList.remove('show');
 
   // If the app is backgrounded mid-run, save what we have instead of losing it
   document.addEventListener('visibilitychange', () => {

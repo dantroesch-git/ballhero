@@ -90,6 +90,60 @@ function sideBody() {
 function svg(id, inner) {
   return `<svg viewBox="0 0 220 184" class="demo-svg ${id}" aria-hidden="true">${inner}</svg>`;
 }
+/* Vorwärts-Pfeil (nach rechts) */
+function fwdArrow(x1, x2, y) {
+  return `<g class="hint" opacity="0.9">
+    <line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#35d07f" stroke-width="4" stroke-linecap="round"/>
+    <path d="M${x2 - 12} ${y - 9} L${x2} ${y} L${x2 - 12} ${y + 9}" stroke="#35d07f" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+}
+
+/* ===========================================================
+   SCHRITT-SEQUENZ für Tricks/Finten — 3 Bilder ①②③ nebeneinander,
+   ein Highlight wandert durch. Klar erkennbar statt Dauer-Loop.
+   Panel-lokale Koordinaten: 0..128 breit, Boden bei y=104.
+   =========================================================== */
+function sBallS(cx, cy) {
+  return `<ellipse cx="${cx}" cy="${cy + 12}" rx="11" ry="3" fill="rgba(0,0,0,0.25)"/>
+    <circle cx="${cx}" cy="${cy}" r="13" fill="#ffd23f" stroke="#20264d" stroke-width="2"/>
+    <circle cx="${cx}" cy="${cy}" r="4" fill="#20264d"/>`;
+}
+function sShoe(cx, cy, color) {
+  return `<ellipse cx="${cx}" cy="${cy}" rx="14" ry="6.5" fill="${color}" stroke="#20264d" stroke-width="1.6"/>`;
+}
+/* Bein + Schuh (Hüfte oben Mitte) */
+function sLeg(hipX, cx, cy, color) {
+  return `<path d="M${hipX} 30 L${cx} ${cy - 5}" stroke="#2a3488" stroke-width="9" stroke-linecap="round"/>${sShoe(cx, cy, color)}`;
+}
+function sHead() {
+  return `<circle cx="64" cy="20" r="9" fill="#ffcf9e"/><path d="M55 17a9 9 0 0 1 18 0z" fill="#5b3a1e"/>`;
+}
+function sArrowH(x1, x2, y, color) { // horizontaler Pfeil, Spitze bei x2
+  const dir = x2 > x1 ? -1 : 1;
+  return `<g><line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${color}" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M${x2 + dir * 9} ${y - 7} L${x2} ${y} L${x2 + dir * 9} ${y + 7}" stroke="${color}" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+}
+function sArrowUp(x, y1, y2, color) {
+  return `<g><line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${color}" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M${x - 7} ${y2 + 9} L${x} ${y2} L${x + 7} ${y2 + 9}" stroke="${color}" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+}
+function sArcOver(cx, cy, color) { // Bogen ÜBER den Ball (für Übersteiger)
+  return `<g><path d="M${cx - 22} ${cy} Q ${cx} ${cy - 32} ${cx + 22} ${cy}" stroke="${color}" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="4 4"/>
+    <path d="M${cx + 13} ${cy - 7} L${cx + 22} ${cy} L${cx + 14} ${cy + 7}" stroke="${color}" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+}
+function sGround() { return `<line x1="12" y1="104" x2="116" y2="104" stroke="rgba(255,255,255,0.18)" stroke-width="2.5" stroke-linecap="round"/>`; }
+function sNum(n) {
+  return `<g class="s-num s${n}"><circle cx="17" cy="17" r="12" fill="#a06bff"/>
+    <text x="17" y="22" font-size="15" font-weight="800" fill="#fff" text-anchor="middle">${n}</text></g>`;
+}
+/* Setzt 3 Panels zusammen + wanderndes Highlight */
+function stepStrip(id, p1, p2, p3) {
+  const panel = (i, inner) => `<g transform="translate(${i * 128},0)">${sGround()}${sHead()}${inner}${sNum(i + 1)}</g>`;
+  const div = x => `<line x1="${x}" y1="14" x2="${x}" y2="118" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>`;
+  return `<svg viewBox="0 0 384 132" class="demo-svg step-strip ${id}" aria-hidden="true">
+    ${panel(0, p1)}${div(128)}${panel(1, p2)}${div(256)}${panel(2, p3)}
+    <rect class="step-hl" x="3" y="3" width="122" height="126" rx="12" fill="none" stroke="#35d07f" stroke-width="3"/>
+  </svg>`;
+}
 
 /* ---------------- Die Übungen ---------------- */
 const DEMOS = {
@@ -159,26 +213,19 @@ const DEMOS = {
     ${frontBody()}`),
 
   // La Croqueta — Ball blitzschnell von Fuß zu Fuß
-  croqueta: () => svg('d-croqueta', `
-    ${ground()}
-    ${trail('M84 156 H136', 'cq-trail')}
-    ${leg('cq-l', 100, 80, 156, SHOE_L)}
-    ${leg('cq-r', 120, 140, 156, SHOE_R)}
-    ${ball('ball cq-ball', 110, 150)}
-    ${flash('cq-flash', 110, 150)}
-    <text class="sparkle" x="152" y="56" font-size="20">⚡️</text>
-    ${frontBody()}`),
+  // La Croqueta — Sequenz: Ball rechts → blitzschnell nach links → weiter
+  croqueta: () => stepStrip('t-croqueta',
+    `${sLeg(56, 42, 100, SHOE_L)}${sBallS(64, 90)}${sLeg(74, 86, 100, SHOE_R)}`,
+    `${sLeg(56, 40, 100, SHOE_L)}${sArrowH(76, 48, 96, '#35d07f')}${sBallS(50, 90)}${sLeg(74, 86, 100, SHOE_R)}`,
+    `${sLeg(56, 50, 100, SHOE_L)}${sLeg(74, 72, 100, SHOE_R)}${sBallS(60, 90)}${sArrowUp(60, 84, 54, '#35d07f')}`
+  ),
 
-  // Übersteiger — Fuß kreist über den Ball (1), dann Ball weg (2)
-  stepover: () => svg('d-stepover', `
-    ${ground()}
-    <path class="trail so-circle" d="M106 136 a19 15 0 1 1 0.1 0" fill="none" stroke="#a06bff" stroke-width="3" stroke-dasharray="3 6"/>
-    ${trail('M112 154 H172', 'so-out')}
-    ${leg('', 100, 84, 154, SHOE_L)}
-    ${leg('so-r', 120, 116, 154, SHOE_R)}
-    ${ball('ball so-ball', 106, 150)}
-    ${phase(1, 130, 116)}${phase(2, 176, 148)}
-    ${frontBody()}`),
+  // Übersteiger (Schere) — als Schritt-Sequenz: drüber → Finte → weg
+  stepover: () => stepStrip('t-stepover',
+    `${sLeg(56, 40, 100, SHOE_L)}${sBallS(64, 88)}${sArcOver(64, 74, '#35d07f')}${sLeg(74, 64, 52, SHOE_R)}`,
+    `${sLeg(56, 40, 100, SHOE_L)}${sBallS(64, 88)}${sLeg(74, 94, 100, SHOE_R)}`,
+    `${sLeg(62, 74, 100, SHOE_R)}${sArrowH(82, 30, 88, '#ff6b9d')}${sBallS(30, 88)}`
+  ),
 
   // Ballannahme & Schuss — Seitenansicht: Ball zur Wand und zurück
   striking: () => svg('d-striking', `
@@ -196,6 +243,68 @@ const DEMOS = {
     </g>
     ${ball('ball st-ball', 120, 149)}
     ${flash('st-flash', 120, 149)}`),
+
+  // Tempo-Dribbling / Antritt / 1-gegen-1 — mit dem Ball nach vorne laufen
+  run: () => svg('d-run', `
+    ${ground()}
+    ${fwdArrow(126, 190, 150)}
+    <g class="run-lines" opacity="0.5">
+      <line x1="60" y1="120" x2="30" y2="120" stroke="#8fa0ff" stroke-width="3" stroke-linecap="round"/>
+      <line x1="66" y1="134" x2="34" y2="134" stroke="#8fa0ff" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    ${leg('run-l', 100, 92, 154, SHOE_L)}
+    ${leg('run-r', 120, 122, 154, SHOE_R)}
+    ${ball('ball run-ball', 134, 150)}
+    ${frontBody()}`),
+
+  // Innenseiten-Cut — Sequenz: geradeaus antäuschen → Innenseite → scharf weg
+  cut: () => stepStrip('t-cut',
+    `${sLeg(56, 44, 100, SHOE_L)}${sBallS(86, 88)}${sArrowH(58, 106, 104, '#35d07f')}`,
+    `${sLeg(56, 42, 100, SHOE_L)}${sBallS(66, 88)}${sLeg(74, 84, 98, SHOE_R)}`,
+    `${sLeg(62, 74, 100, SHOE_R)}${sArrowH(80, 28, 88, '#ff6b9d')}${sBallS(28, 88)}`
+  ),
+
+  // Zurückziehen — Sequenz: Sohle drauf → zurückziehen → drehen & weg
+  dragback: () => stepStrip('t-dragback',
+    `${sLeg(56, 44, 100, SHOE_L)}${sBallS(74, 90)}${sLeg(76, 74, 78, SHOE_R)}`,
+    `${sLeg(56, 44, 100, SHOE_L)}${sArrowH(78, 42, 96, '#ff6b9d')}${sBallS(42, 90)}${sShoe(42, 78, SHOE_R)}`,
+    `${sLeg(56, 50, 100, SHOE_L)}${sLeg(74, 72, 100, SHOE_R)}${sBallS(60, 90)}${sArrowUp(60, 84, 54, '#35d07f')}`
+  ),
+
+  // Innen-Außen — Ball mit einem Fuß im Zickzack antippen
+  insideout: () => svg('d-insideout', `
+    ${ground()}
+    <path class="trail" d="M96 156 L118 150 L96 144 L118 150" stroke="#35d07f" stroke-width="3" stroke-dasharray="3 6" fill="none"/>
+    ${leg('', 100, 90, 154, SHOE_L)}
+    ${leg('io-r', 120, 122, 152, SHOE_R)}
+    ${ball('ball io-ball', 108, 150)}
+    ${frontBody()}`),
+
+  // Schnelle Füße — ohne Ball, ganz schnell auf der Stelle tippen
+  ladder: () => svg('d-ladder', `
+    ${ground()}
+    <g class="ll-lines" opacity="0.45">
+      <line x1="70" y1="158" x2="150" y2="158" stroke="#8fa0ff" stroke-width="2"/>
+      <line x1="86" y1="150" x2="86" y2="166" stroke="#8fa0ff" stroke-width="2"/>
+      <line x1="110" y1="150" x2="110" y2="166" stroke="#8fa0ff" stroke-width="2"/>
+      <line x1="134" y1="150" x2="134" y2="166" stroke="#8fa0ff" stroke-width="2"/>
+    </g>
+    ${leg('lad-l', 100, 96, 154, SHOE_L)}
+    ${leg('lad-r', 120, 124, 154, SHOE_R)}
+    <text class="sparkle" x="158" y="60" font-size="20">⚡️</text>
+    ${frontBody()}`),
+
+  // Ball stoppen & Balance — Sohle auf den Ball, kurz balancieren
+  stopball: () => svg('d-stopball', `
+    ${ground()}
+    ${leg('', 100, 90, 156, SHOE_L)}
+    <g class="leg stop-r" style="transform-origin:110px ${HIPY}px">
+      <path d="M120 ${HIPY} L124 138" stroke="#2a3488" stroke-width="16" stroke-linecap="round"/>
+      <g class="shoe"><ellipse cx="126" cy="140" rx="16" ry="7" fill="${SHOE_R}" stroke="#20264d" stroke-width="2"/></g>
+    </g>
+    ${ball('ball stop-ball', 126, 150)}
+    <circle class="flash stop-flash" cx="126" cy="146" r="12" fill="none" stroke="#fff" stroke-width="3"/>
+    ${frontBody()}`),
 };
 
 function demoFor(missionId) {

@@ -24,6 +24,8 @@ Mobile-first Web-App (PWA), läuft ohne Backend, ohne Anmeldung, ohne Kosten.
   Allround, **Barcelona/La Masia** (erster Kontakt, La Croqueta), **Ajax** (1-gegen-1,
   Übersteiger), **PSG-Stil** (Technik & Schuss). Inspiriert von den öffentlich
   bekannten Philosophien, kindgerecht adaptiert (keine lizenzierten Vereinsprogramme).
+- **24 Übungen** in einer nach Kategorien sortierten **Übungs-Bibliothek** (Ballkontrolle, Dribbling & 1-gegen-1, schwacher Fuß, Koordination/Schuss/Antritt) — jede mit eigener Animation + Sprachanleitung
+- **Persönlicher Plan „Mein Plan"** (Standard): Fokus aus der Video-Analyse — enge Ballführung, Kopf hoch, schwacher Fuß + Antritt/1-gegen-1 als Stärke
 - **Level-System**: 6 Ränge (Anfänger → Legende) mit Level-up-Feier
 - **Trophäen**: 9 sammelbare Badges (erstes Video, 3-Tage-Streak, Jongleur …)
 - **Maskottchen „Kicky"**: animierter Ball, begrüßt & feiert mit

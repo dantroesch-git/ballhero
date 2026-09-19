@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="BallHero">
   <title>BallHero Kids</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=19">
 </head>
 <body>
   <div id="app">
@@ -43,7 +43,7 @@
     <!-- ============ HOME ============ -->
     <section id="screen-home" class="screen">
       <div class="topbar">
-        <div class="avatar" id="homeAvatar">🦊</div>
+        <div class="avatar" id="homeAvatar" title="Kind wechseln">🦊</div>
         <div class="who">
           <div class="small">Hallo,</div>
           <div class="name" id="homeName">Leo</div>
@@ -101,12 +101,18 @@
       <!-- Animierte Demo: zeigt die Bewegung ohne ein einziges Wort -->
       <div class="demo-box" id="mDemo"></div>
 
+      <!-- Echte Beispiel-Videos (YouTube-Einbettung) -->
+      <div id="mVideos"></div>
+
       <div class="center">
         <h1 id="mDetailTitle">Toe Taps</h1>
         <div class="goal-num" id="mGoalNum">100</div>
         <div class="goal-dots" id="mGoalDots"></div>
         <div class="small" id="mGoalUnit">Kontakte</div>
       </div>
+
+      <!-- Was brauchst du? (mit Heim-Ersatz + Kauf-Option) -->
+      <div class="gear-box" id="mGear"></div>
 
       <!-- Vorlesen: der wichtigste Knopf für Nicht-Leser -->
       <button class="listen-btn mt" id="mListen">
@@ -338,14 +344,16 @@
           <span>🔢 Beim Zählen laut mitzählen</span>
         </label>
 
-        <div class="field" style="margin-top:12px">
-          <label for="voiceSelect">🗣️ Stimme</label>
-          <div style="display:flex;gap:8px">
-            <select id="voiceSelect" style="flex:1"></select>
-            <button class="btn secondary sm" id="voiceTest" style="width:auto;white-space:nowrap">▶︎ Test</button>
-          </div>
-          <p class="hint" id="voiceHint" style="text-align:left;margin-top:8px"></p>
-        </div>
+        <p class="hint" style="text-align:left;margin-top:10px">🗣️ Stimme: <b>Anna (Premium)</b> — die Übungs-Erklärungen sind mit einer natürlichen Stimme vorproduziert.</p>
+      </div>
+
+      <div class="card">
+        <h3>⚽️ Ausrüstung</h3>
+        <p class="small" style="margin:4px 0 10px">Was habt ihr zuhause? Danach zeigt die App passende Übungen — fehlendes gibt's als Ersatz-Tipp oder Set.</p>
+        <div id="gearOwn"></div>
+        <div class="divider"></div>
+        <h3 style="margin-bottom:6px">🛒 Sets (bald kaufbar)</h3>
+        <div id="gearShop"></div>
       </div>
 
       <div class="divider"></div>
@@ -353,9 +361,22 @@
       <button class="btn ghost" id="resetAll" style="margin-top:8px">Alle Daten löschen</button>
     </section>
 
+    <!-- ============ ÜBUNGS-BIBLIOTHEK ============ -->
+    <section id="screen-library" class="screen">
+      <h1>Übungen</h1>
+      <p class="small">Deine ganze Trainings-Bibliothek — tippe eine Übung an</p>
+      <div class="lib-filter" id="libFilter">
+        <button class="lf-chip active" data-filter="all">Alle</button>
+        <button class="lf-chip" data-filter="zimmer">🏠 Zimmer</button>
+        <button class="lf-chip" data-filter="mine">✅ Meine Ausrüstung</button>
+      </div>
+      <div id="libraryList"></div>
+    </section>
+
     <!-- ============ BOTTOM NAV ============ -->
     <nav class="nav hidden" id="nav">
       <button data-screen="home" class="active"><span class="ic">🏠</span>Start</button>
+      <button data-screen="library"><span class="ic">📚</span>Übungen</button>
       <button data-screen="progress"><span class="ic">📈</span>Fortschritt</button>
       <button data-screen="parent"><span class="ic">👨‍👩‍👦</span>Eltern</button>
     </nav>
@@ -376,10 +397,58 @@
       <div class="box" style="width:100%;max-width:420px">
         <h3 id="playerTitle" style="margin-bottom:8px">Video</h3>
         <video id="playerVideo" class="review-video" controls playsinline></video>
+        <button class="btn" id="playerAnalyze">🔬 Analyse (Zeitlupe · Bild-für-Bild · Zeichnen)</button>
+        <button class="btn green mt" id="playerDownload">⬇︎ In BallHero-Ordner speichern</button>
         <div class="row-btns mt">
           <button class="btn secondary" id="playerClose">Schließen</button>
           <button class="btn danger" id="playerDelete">Löschen</button>
         </div>
+        <p class="hint" id="playerDlHint" style="margin-top:8px"></p>
+      </div>
+    </div>
+
+    <!-- ============ ANALYSE (Hudl-Technique-Stil) ============ -->
+    <div class="reward" id="analyzer">
+      <div class="box" style="width:100%;max-width:680px">
+        <div class="an-head">
+          <span id="anTitle">Analyse</span>
+          <span class="an-time" id="anTime">0.00s</span>
+        </div>
+        <div class="an-stage" id="anStage">
+          <video id="anVideo" playsinline muted></video>
+          <canvas id="anCanvas"></canvas>
+        </div>
+        <input type="range" id="anScrub" class="an-scrub" min="0" max="1000" value="0">
+        <div class="an-tools">
+          <button class="an-btn" id="anBack" title="Bild zurück">⏮</button>
+          <button class="an-btn" id="anPlay" title="Play/Pause">▶︎</button>
+          <button class="an-btn" id="anFwd" title="Bild vor">⏭</button>
+          <button class="an-btn" id="anSpeed" title="Tempo">1×</button>
+          <button class="an-btn" id="anDraw" title="Zeichnen">✏️</button>
+          <button class="an-btn" id="anColor" title="Farbe"><span id="anColorDot" class="an-dot"></span></button>
+          <button class="an-btn" id="anClear" title="Löschen">🗑</button>
+        </div>
+        <p class="hint">Pause + Bild-für-Bild (⏮/⏭), Zeitlupe (Tempo), und mit ✏️ direkt aufs Bild malen (Linien, Winkel zeigen).</p>
+        <button class="btn secondary mt" id="anClose">Fertig</button>
+      </div>
+    </div>
+
+    <!-- ============ PROFIL-WÄHLER ============ -->
+    <div class="reward" id="profileChooser">
+      <div class="box" style="width:100%;max-width:460px">
+        <h2 class="center" style="margin-bottom:4px">Wer trainiert?</h2>
+        <p class="small center" style="margin-bottom:14px">Tippe auf dein Kind</p>
+        <div class="pf-grid" id="profileList"></div>
+        <button class="btn ghost mt" id="profileClose" style="max-width:200px;margin:14px auto 0">Schließen</button>
+      </div>
+    </div>
+
+    <!-- ============ YOUTUBE-BEISPIEL-PLAYER ============ -->
+    <div class="reward" id="ytPlayer">
+      <div class="box" style="width:100%;max-width:560px">
+        <h3 id="ytTitle" style="margin-bottom:8px">Beispiel</h3>
+        <div class="yt-frame"><iframe id="ytFrame" allow="encrypted-media; picture-in-picture" allowfullscreen frameborder="0"></iframe></div>
+        <button class="btn secondary mt" id="ytClose">Schließen</button>
       </div>
     </div>
 
@@ -389,7 +458,7 @@
     <div id="confetti"></div>
   </div>
 
-  <script src="demos.js?v=8"></script>
-  <script src="app.js?v=8"></script>
+  <script src="demos.js?v=19"></script>
+  <script src="app.js?v=19"></script>
 </body>
 </html>
