@@ -885,9 +885,36 @@ function openMission(id, from) {
 
   renderGearBox(m);
   renderMissionVideos(m);
+  renderMissionRecordings(m);
 
   go('mission');
   narrateMission();
+}
+
+/* Eigene Aufnahmen zu DIESER Übung (lokal, pro Kind) — neue hängen unten dran.
+   Jede lässt sich ansehen oder direkt in Zeitlupe/Bild-für-Bild analysieren. */
+async function renderMissionRecordings(m) {
+  const box = document.getElementById('mRecordings');
+  if (!box) return;
+  let vids = [];
+  try { vids = await dbAll(); } catch (e) {}
+  vids = vids.filter(v => v.missionId === m.id && (!v.profileId || v.profileId === S.activeId));
+  vids.sort((a, b) => a.ts - b.ts); // älteste oben, neueste unten dran
+  if (!vids.length) { box.innerHTML = ''; return; }
+  box.innerHTML =
+    '<div class="recs-head">🎥 Deine Aufnahmen <span class="recs-n">' + vids.length + '</span></div>' +
+    '<p class="recs-hint">Schaut sie gemeinsam an — mit 🔍 <b>Zeitlupe</b> Bild für Bild besser werden.</p>' +
+    '<div class="recs-list">' + vids.map((v, i) =>
+      '<div class="rec-item">' +
+        '<div class="rec-n">' + (i + 1) + '</div>' +
+        '<div class="rec-info"><div class="rec-t">' + fmtDate(v.date) + '</div>' +
+        '<div class="rec-d">' + (v.reps != null ? v.reps + ' · ' : '') + (v.sec || 0) + 's</div></div>' +
+        '<button class="rec-btn" data-id="' + v.id + '" data-act="play" aria-label="Ansehen">▶︎</button>' +
+        '<button class="rec-btn slow" data-id="' + v.id + '" data-act="slow" aria-label="Zeitlupe">🔍</button>' +
+      '</div>').join('') + '</div>';
+  box.querySelectorAll('.rec-btn').forEach(b => {
+    b.onclick = () => { sfx.pop && sfx.pop(); haptic(12); b.dataset.act === 'slow' ? openSlowmo(b.dataset.id) : playVideo(b.dataset.id); };
+  });
 }
 
 /* ===========================================================
@@ -1514,6 +1541,7 @@ function finishSession() {
   show('camReview', false);
   completeMission(currentMission, r.reps, r.secs, { headUpPct: r.headUpPct, hadPose: r.hadPose });
   renderVideoList();
+  if (currentMission) renderMissionRecordings(currentMission);
 }
 
 function reviewRetry() {
@@ -1630,6 +1658,19 @@ async function playVideo(id) {
   document.getElementById('playerVideo').src = playingUrl;
   document.getElementById('playerDlHint').textContent = '';
   document.getElementById('player').classList.add('show');
+}
+
+/* Direkt in die Zeitlupe/Analyse springen (ohne den normalen Player). */
+async function openSlowmo(id) {
+  const vids = await dbAll();
+  const v = vids.find(x => x.id === id);
+  if (!v || !v.blob) return;
+  playingId = id;
+  playingBlob = v.blob;
+  playingMeta = { title: v.title, date: v.date };
+  if (playingUrl) URL.revokeObjectURL(playingUrl);
+  playingUrl = URL.createObjectURL(v.blob);
+  openAnalyzer();
 }
 
 /* Video speichern — zuerst direkt in den BallHero-Ordner (lokaler Server),

@@ -653,6 +653,21 @@ select:focus { outline: 2px solid var(--primary); }
 .vid-item .info .d { font-size: 0.78rem; color: var(--muted); }
 .vid-item .play { color: var(--primary); font-size: 1.2rem; }
 
+/* Eigene Aufnahmen unter der Übung */
+#mRecordings { margin-top: 18px; }
+.recs-head { font-weight: 800; font-size: 1rem; margin: 0 2px 2px; display: flex; align-items: center; gap: 8px; }
+.recs-n { background: var(--primary); color: var(--primary-ink); font-size: 0.75rem; font-weight: 800; border-radius: 999px; padding: 1px 8px; }
+.recs-hint { font-size: 0.8rem; color: var(--muted); margin: 0 2px 10px; }
+.recs-list { display: flex; flex-direction: column; gap: 8px; }
+.rec-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--card-2); border-radius: var(--radius-sm); }
+.rec-item .rec-n { width: 30px; height: 30px; border-radius: 50%; background: var(--card); display: grid; place-items: center; font-weight: 800; font-size: 0.85rem; flex-shrink: 0; }
+.rec-info { flex: 1; min-width: 0; }
+.rec-info .rec-t { font-weight: 700; font-size: 0.9rem; }
+.rec-info .rec-d { font-size: 0.76rem; color: var(--muted); }
+.rec-btn { width: 44px; height: 44px; border-radius: 12px; border: none; background: var(--card); color: var(--text); font-size: 1.15rem; cursor: pointer; flex-shrink: 0; display: grid; place-items: center; }
+.rec-btn.slow { background: var(--primary); color: var(--primary-ink); }
+.rec-btn:active { transform: scale(0.92); }
+
 .counter {
   display: flex; align-items: center; justify-content: center; gap: 22px; margin: 18px 0;
 }
