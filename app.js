@@ -959,6 +959,56 @@ const MISSION_VIDEOS = {
     { id: '4zn2D__2jwQ', label: 'Mit dem Spann (MOJO)' },
     { id: 'DOsbXTR-XBE', label: 'Schritt für Schritt' },
   ],
+  // Deutsche Clips (oEmbed-verifiziert, Freigabe 07.10.26)
+  weakfoot: [
+    { id: 'xxXfhsGKI98', label: 'Training schwacher Fuß (Kinder)' },
+    { id: 'sJV1qZ8kZyY', label: 'Schwacher Fuß — Fußball-Internat' },
+  ],
+  striking: [
+    { id: 'HfV67rCgMI4', label: '9 Varianten der Ballannahme' },
+    { id: '13hIPkWR1oU', label: 'Annahme & Mitnahme — Top 3' },
+  ],
+  solerolls: [
+    { id: 'HEr8yv5WBoU', label: 'Technik zuhause — Ballgefühl' },
+  ],
+  insideout: [
+    { id: 'GPyshhYaHrg', label: 'Dribbelslalom — Ballführung' },
+    { id: 'VlpqXA1f6Xc', label: 'Inneres & äußeres Viereck' },
+  ],
+  figure8: [
+    { id: 'RxjzfbhATNc', label: 'Übungen mit Hütchen' },
+  ],
+  speeddribble: [
+    { id: 'WdnFYkgI-u4', label: 'Top 10 Dribbling (Kinder)' },
+    { id: 'FXAKE-kRgEg', label: 'Dribbling verbessern' },
+  ],
+  onevone: [
+    { id: 'TQWtbbVfaO8', label: 'Clevere Tricks 1-gegen-1' },
+    { id: 'Hdh6Hfifq14', label: '6 Skills fürs 1-gegen-1' },
+  ],
+  weakwall: [
+    { id: 'O_3BrYDYRFs', label: 'Passtraining schwacher Fuß' },
+  ],
+  weakdribble: [
+    { id: '8jBTE3BeRe8', label: 'Schwachen Fuß verbessern' },
+  ],
+  quickfeet: [
+    { id: 't89G5t2bC4s', label: 'Schnelle Füße & Antritt' },
+  ],
+  stopball: [
+    { id: 'NqYiqmCYvnA', label: 'Ballkontrolle — Top 8 (Kinder)' },
+  ],
+  sprintball: [
+    { id: '8pJwrDBDV3Y', label: 'Antritt mit Ball (5 Übungen)' },
+  ],
+  wallpass: [
+    { id: 'bzdfu0nFB3o', label: '10 Passübungen alleine' },
+    { id: 'PGszElA_a4U', label: 'Passübungen zu zweit' },
+  ],
+  trick: [
+    { id: 'aSnGxTxJ5SQ', label: '5 Skills für Anfänger' },
+    { id: '_krm9TtJy4c', label: '6 Tricks in 10 Minuten' },
+  ],
 };
 function renderMissionVideos(m) {
   const box = document.getElementById('mVideos');
@@ -978,7 +1028,7 @@ function openYt(id, label) {
   stopSpeaking();
   document.getElementById('ytTitle').textContent = '🎬 ' + (label || 'Beispiel');
   document.getElementById('ytFrame').src =
-    'https://www.youtube-nocookie.com/embed/' + id + '?rel=0&modestbranding=1&playsinline=1&autoplay=1';
+    'https://www.youtube-nocookie.com/embed/' + id + '?rel=0&modestbranding=1&playsinline=1&autoplay=1&cc_load_policy=1&cc_lang_pref=de&hl=de';
   document.getElementById('ytPlayer').classList.add('show');
 }
 function closeYt() {
