@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="BallHero">
   <title>BallHero Kids</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=22">
+  <link rel="stylesheet" href="styles.css?v=23">
 </head>
 <body>
   <div id="app">
@@ -100,6 +100,8 @@
 
       <!-- Animierte Demo: zeigt die Bewegung ohne ein einziges Wort -->
       <div class="demo-box" id="mDemo"></div>
+      <!-- Kernpunkt in Worten — verankert die Bewegung sprachlich -->
+      <div class="demo-cap" id="mDemoCap"></div>
 
       <!-- Echte Beispiel-Videos (YouTube-Einbettung) -->
       <div id="mVideos"></div>
@@ -464,6 +466,10 @@
           <button class="an-btn" id="anClear" title="Löschen">🗑</button>
         </div>
         <p class="hint">Pause + Bild-für-Bild (⏮/⏭), Zeitlupe (Tempo), und mit ✏️ direkt aufs Bild malen (Linien, Winkel zeigen).</p>
+
+        <!-- Selbst-Check: gemeinsam mit dem Kind abhaken, was gut war -->
+        <div class="an-check" id="anCheck"></div>
+
         <button class="btn secondary mt" id="anClose">Fertig</button>
       </div>
     </div>
@@ -493,7 +499,7 @@
     <div id="confetti"></div>
   </div>
 
-  <script src="demos.js?v=22"></script>
-  <script src="app.js?v=22"></script>
+  <script src="demos.js?v=23"></script>
+  <script src="app.js?v=23"></script>
 </body>
 </html>

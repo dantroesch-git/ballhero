@@ -198,12 +198,18 @@ select:focus { outline: 2px solid var(--primary); }
   border: 1px solid var(--line); border-radius: var(--radius);
   padding: 6px; margin-bottom: 14px; position: relative;
 }
-.demo-svg { width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto; }
+.demo-svg { width: 100%; max-width: 360px; height: auto; display: block; margin: 0 auto; }
+.demo-cap {
+  text-align: center; font-weight: 700; font-size: 0.92rem; color: var(--text);
+  background: var(--card-2); border: 1px solid var(--line); border-radius: 12px;
+  padding: 8px 12px; margin: -6px auto 14px; max-width: 360px;
+}
+.demo-cap:empty { display: none; }
 .demo-svg .leg { will-change: transform; }
 .demo-svg .shoe { will-change: transform; }
 
 /* Trick-Schritt-Sequenz ①②③ — Highlight wandert durch die Bilder */
-.demo-svg.step-strip { max-width: 340px; }
+.demo-svg.step-strip { max-width: 360px; }
 .step-strip .step-hl {
   transform-box: view-box;
   animation: stepHl 3.3s infinite steps(1, jump-none);
@@ -412,6 +418,19 @@ select:focus { outline: 2px solid var(--primary); }
 .an-btn:active { transform: scale(0.95); }
 .an-btn.on { background: var(--green); color: #04231a; border-color: transparent; }
 .an-dot { width: 20px; height: 20px; border-radius: 50%; background: #ff5a5a; display: inline-block; border: 2px solid #fff; }
+
+/* Selbst-Check im Analyzer */
+.an-check { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+.an-check:empty { display: none; }
+.an-check-head { font-weight: 800; font-size: 0.9rem; margin-bottom: 2px; }
+.an-check-item {
+  display: flex; align-items: center; gap: 10px; text-align: left; width: 100%;
+  padding: 11px 12px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--card-2); color: var(--text); font-size: 0.9rem; font-weight: 600; cursor: pointer;
+}
+.an-check-item .acc-box { font-size: 1.15rem; flex-shrink: 0; }
+.an-check-item.on { background: rgba(53,208,127,0.16); border-color: var(--green); }
+.an-check-item:active { transform: scale(0.99); }
 
 /* Profi-Coach-Analyse (Karte + Report) */
 .analysis-card { background: linear-gradient(135deg, #2a2166, #1a2050); }

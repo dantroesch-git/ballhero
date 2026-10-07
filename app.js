@@ -868,6 +868,8 @@ function openMission(id, from) {
 
   // Animierte Demo — erklärt die Bewegung ohne ein Wort
   document.getElementById('mDemo').innerHTML = demoFor(m.demo || m.id);
+  const cap = document.getElementById('mDemoCap');
+  if (cap) cap.textContent = (m.cues && m.cues[0]) ? '🎯 ' + m.cues[0] : '';
 
   document.getElementById('mDetailTitle').textContent = m.title;
   document.getElementById('mGoalNum').textContent = goalFor(m);
@@ -1651,7 +1653,7 @@ async function playVideo(id) {
   if (!v || !v.blob) return;
   playingId = id;
   playingBlob = v.blob;
-  playingMeta = { title: v.title, date: v.date };
+  playingMeta = { title: v.title, date: v.date, missionId: v.missionId };
   if (playingUrl) URL.revokeObjectURL(playingUrl);
   playingUrl = URL.createObjectURL(v.blob);
   document.getElementById('playerTitle').textContent = v.emoji + ' ' + v.title + ' · ' + fmtDate(v.date);
@@ -1667,7 +1669,7 @@ async function openSlowmo(id) {
   if (!v || !v.blob) return;
   playingId = id;
   playingBlob = v.blob;
-  playingMeta = { title: v.title, date: v.date };
+  playingMeta = { title: v.title, date: v.date, missionId: v.missionId };
   if (playingUrl) URL.revokeObjectURL(playingUrl);
   playingUrl = URL.createObjectURL(v.blob);
   openAnalyzer();
@@ -1749,6 +1751,7 @@ function openAnalyzer() {
   AN.drawing = false; document.getElementById('anDraw').classList.remove('on');
   AN.ci = 0; document.getElementById('anColorDot').style.background = AN.colors[0];
   document.getElementById('anTitle').textContent = playingMeta ? (playingMeta.title || 'Analyse') : 'Analyse';
+  renderAnCheck(playingMeta && playingMeta.missionId);
   document.getElementById('anPlay').textContent = '▶︎';
   document.getElementById('analyzer').classList.add('show');
   v.onloadedmetadata = () => { AN.dur = v.duration || 0; sizeAnCanvas(); redrawAn(); };
@@ -1759,6 +1762,28 @@ function openAnalyzer() {
   v.onended = () => { document.getElementById('anPlay').textContent = '▶︎'; };
   setTimeout(sizeAnCanvas, 60);
 }
+/* Selbst-Check: „Darauf achten"-Punkte der Übung zum gemeinsamen Abhaken.
+   Rein visuelle Hilfe fürs Auswerten — Haken werden nicht gespeichert. */
+function renderAnCheck(missionId) {
+  const box = document.getElementById('anCheck');
+  if (!box) return;
+  const m = MISSIONS.find(x => x.id === missionId);
+  const points = (m && m.cues ? m.cues : []).slice(0, 3);
+  if (!points.length) { box.innerHTML = ''; return; }
+  box.innerHTML =
+    '<div class="an-check-head">👀 Schaut gemeinsam — hat das geklappt?</div>' +
+    points.map((p, i) =>
+      '<button class="an-check-item" data-i="' + i + '"><span class="acc-box">⬜</span><span>' + p + '</span></button>'
+    ).join('');
+  box.querySelectorAll('.an-check-item').forEach(el => {
+    el.onclick = () => {
+      const on = el.classList.toggle('on');
+      el.querySelector('.acc-box').textContent = on ? '✅' : '⬜';
+      haptic(10);
+    };
+  });
+}
+
 function closeAnalyzer() {
   const v = document.getElementById('anVideo');
   v.pause(); v.removeAttribute('src'); v.load();
