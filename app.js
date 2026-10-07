@@ -16,7 +16,7 @@ const MISSIONS = [
     goal: 100, unit: 'Kontakte', stars: 3, skill: 'ballControl',
     tags: ['Ballgefühl', 'Rhythmus', 'Beide Füße'],
     desc: 'Tippe abwechselnd mit der Sohle leicht oben auf den Ball – links, rechts, links, rechts. Ganz leichte, schnelle Berührungen.',
-    cues: ['Kleine, schnelle Berührungen', 'Auf den Fußballen bleiben', 'Kopf alle paar Kontakte kurz hoch', 'Ball ruhig unter dir halten'],
+    cues: ['Nur die Sohle tippt oben auf den Ball', 'Ganz schnell abwechseln: links, rechts', 'Ball bleibt genau unter dir', 'Alle paar Kontakte kurz hochschauen'],
     kid: 'Toe Taps! Tippe ganz leicht mit der Sohle oben auf den Ball. Links, rechts, links, rechts. Ganz schnell und ganz leicht. Schau ab und zu nach vorne!',
   },
   {
@@ -24,7 +24,7 @@ const MISSIONS = [
     goal: 80, unit: 'Kontakte', stars: 3, skill: 'ballControl',
     tags: ['Innenseite', 'Kontrolle'],
     desc: 'Schiebe den Ball mit der Innenseite von einem Fuß zum anderen hin und her. Sauberer, kontrollierter Rhythmus.',
-    cues: ['Innenseite benutzen', 'Ball berühren, nicht wegschieben', 'Knie leicht gebeugt', 'Gleichmäßiges Tempo'],
+    cues: ['Ball springt von Innenseite zu Innenseite', 'Nur antippen statt wegschieben', 'Füße locker und schnell', 'Knie leicht gebeugt, Oberkörper ruhig'],
     kid: 'Foundations! Schiebe den Ball mit der Innenseite hin und her. Von einem Fuß zum anderen. Immer schön gleichmäßig.',
   },
   {
@@ -32,7 +32,7 @@ const MISSIONS = [
     goal: 60, unit: 'Sekunden', stars: 2, skill: 'dribbling',
     tags: ['Dribbling', 'Richtungswechsel'],
     desc: 'Dribble in kleinen Kontakten durch einen Slalom (Schuhe/Flaschen als Hütchen). Viele Berührungen, enge Führung.',
-    cues: ['Viele kleine Kontakte', 'Ball nah am Fuß', 'Innen- und Außenseite nutzen', 'Bei jedem Hütchen Blick hoch'],
+    cues: ['Ball bleibt dicht am Fuß', 'Eng um jedes Hütchen herum', 'Innen- und Außenseite abwechseln', 'Nach jedem Hütchen kurz hochschauen'],
     kid: 'Slalom! Dribble um die Hütchen herum. Mach ganz viele kleine Berührungen. Der Ball bleibt immer dicht bei deinem Fuß.',
   },
   {
@@ -40,7 +40,7 @@ const MISSIONS = [
     goal: 40, unit: 'Kontakte', stars: 3, skill: 'weakFoot',
     tags: ['Schwacher Fuß', 'Riesen-Hebel'],
     desc: 'Nur mit dem schwächeren Fuß: Sohle rollen, Innenseite tippen, kleine Pässe gegen die Wand.',
-    cues: ['Bewusst langsam & sauber', 'Nicht ärgern – üben!', 'Gleicher Ablauf wie starker Fuß', 'Lieber wenige gute Kontakte'],
+    cues: ['Nur mit dem schwachen Fuß', 'Lieber langsam und sauber als schnell', 'Gleicher Ablauf wie beim starken Fuß', 'Jeder saubere Kontakt zählt'],
     kid: 'Schwacher Fuß! Jetzt nur mit dem Fuß, der schwerer ist. Ganz langsam und sauber. Das macht dich richtig stark!',
   },
   {
@@ -48,7 +48,7 @@ const MISSIONS = [
     goal: 30, unit: 'Kontakte', stars: 2, skill: 'coordination',
     tags: ['Koordination', 'Balance'],
     desc: 'Ball hochwerfen und mit dem Fuß hochhalten. Am Anfang: 1 Kontakt, fangen, wieder hoch. Dann steigern.',
-    cues: ['Fuß fest, Zehen leicht hoch', 'Ball auf Kopfhöhe halten', 'Ruhig atmen', 'Beide Füße probieren'],
+    cues: ['Fuß waagerecht, Zehen leicht hoch', 'Ball nur bis Kniehöhe hochtippen', 'Immer die Mitte des Balls treffen', 'Erst ein Kontakt, dann zwei, dann mehr'],
     kid: 'Jonglieren! Halte den Ball mit dem Fuß in der Luft. Wenn er runterfällt, ist das gar nicht schlimm. Einfach nochmal probieren!',
   },
   {
@@ -56,7 +56,7 @@ const MISSIONS = [
     goal: 10, unit: 'Versuche', stars: 2, skill: 'coordination',
     tags: ['Kreativität', 'Spaß'],
     desc: 'Heute: die Sohlen-Rolle (Ball mit der Sohle zur Seite rollen und mit dem anderen Fuß stoppen). Frei ausprobieren!',
-    cues: ['Trauen & ausprobieren', 'Links und rechts testen', 'Erst langsam, dann schneller', 'Fehler sind okay'],
+    cues: ['Erst ganz langsam Schritt für Schritt', 'Mit links und mit rechts testen', 'Dann Tempo dazugeben', 'Trau dich – einfach ausprobieren'],
     kid: 'Trick des Tages! Rolle den Ball mit der Sohle zur Seite. Und stoppe ihn mit dem anderen Fuß. Trau dich einfach!',
   },
 
@@ -66,7 +66,7 @@ const MISSIONS = [
     goal: 30, unit: 'Wechsel', stars: 3, skill: 'dribbling',
     tags: ['Barça', 'Erster Kontakt', 'Beide Füße'],
     desc: 'Der Iniesta-Trick: den Ball ganz schnell mit der Innenseite von einem Fuß zum anderen schieben, um an einem Gegner vorbeizukommen.',
-    cues: ['Innenseite → Innenseite', 'Ganz schnell rüberschieben', 'Ball dicht am Fuß', 'Danach sofort weiter'],
+    cues: ['Ball blitzschnell von Fuß zu Fuß', 'Beide Male mit der Innenseite', 'Ball bleibt flach am Boden', 'Danach sofort weiterlaufen'],
     kid: 'La Croqueta! Schiebe den Ball ganz schnell von einem Fuß zum anderen. Rüber – und weiter. So wie Iniesta beim FC Barcelona!',
   },
   {
@@ -74,7 +74,7 @@ const MISSIONS = [
     goal: 20, unit: 'Übersteiger', stars: 3, skill: 'dribbling',
     tags: ['Ajax', 'Finte', 'Kreativität'],
     desc: 'Die Schere: mit dem Fuß außen über den Ball steigen, als gingst du in eine Richtung – und dann in die andere weg.',
-    cues: ['Fuß außen um den Ball', 'Erst antäuschen', 'Dann in die andere Richtung', 'Mutig und schnell'],
+    cues: ['Fuß von innen nach außen um den Ball', 'Dabei den Ball nicht berühren', 'Antäuschen, dann in die andere Richtung weg', 'Oberkörper mittäuschen'],
     kid: 'Übersteiger! Steig mit dem Fuß über den Ball, als gehst du nach links. Und dann schnell nach rechts weg. Trau dich!',
   },
   {
@@ -82,7 +82,7 @@ const MISSIONS = [
     goal: 20, unit: 'Schüsse', stars: 2, skill: 'coordination',
     tags: ['PSG', 'Technik', 'Schuss'],
     desc: 'Ball gegen die Wand spielen, sauber annehmen und mit dem Vollspann (Schnürsenkel) zurückschießen. Standbein neben den Ball.',
-    cues: ['Standbein neben den Ball', 'Mit dem Spann treffen', 'Fuß fest machen', 'Beide Füße üben'],
+    cues: ['Standbein zeigt neben den Ball', 'Mit dem Spann (Schnürsenkel) treffen', 'Fußgelenk fest machen', 'Kurz aufs Ziel schauen, dann schießen'],
     kid: 'Schuss-Technik! Spiel den Ball gegen die Wand. Nimm ihn an. Und schieß mit den Schnürsenkeln zurück. Standbein neben den Ball!',
   },
 
@@ -93,7 +93,7 @@ const MISSIONS = [
     goal: 40, unit: 'Rollen', stars: 2, skill: 'ballControl',
     tags: ['Ballgefühl', 'Sohle'],
     desc: 'Ball mit der Sohle hin und her rollen – ein Fuß rollt ihn zur Seite, der andere stoppt und rollt zurück.',
-    cues: ['Sohle leicht auf den Ball', 'Ball nicht wegschieben', 'Beide Füße', 'Ruhiger Rhythmus'],
+    cues: ['Ball mit der Sohle zur Seite rollen', 'Sanft rollen statt wegschieben', 'Direkt mit dem anderen Fuß zurück', 'Gleichmäßiger Rhythmus'],
     kid: 'Sohlen-Rollen! Roll den Ball mit der Fußsohle hin und her. Ganz sanft. Der Ball bleibt bei dir.',
   },
   {
@@ -101,7 +101,7 @@ const MISSIONS = [
     goal: 40, unit: 'Kontakte', stars: 2, skill: 'ballControl',
     tags: ['Ballgefühl', 'Beide Seiten'],
     desc: 'Ball mit EINEM Fuß antippen: einmal mit der Innenseite, einmal mit der Außenseite – im Zickzack.',
-    cues: ['Innenseite, dann Außenseite', 'Ball dicht am Fuß', 'Kleine Kontakte', 'Dann Fuß wechseln'],
+    cues: ['Erst Innenseite, dann Außenseite – selber Fuß', 'Zwei kurze Kontakte hintereinander', 'Ball bleibt dicht am Fuß', 'Dann mit dem anderen Fuß'],
     kid: 'Innen-Außen! Tipp den Ball mit einem Fuß. Erst innen, dann außen. Zickzack. So lernst du beide Seiten!',
   },
   {
@@ -109,7 +109,7 @@ const MISSIONS = [
     goal: 50, unit: 'Kontakte', stars: 2, skill: 'ballControl',
     tags: ['Schnelligkeit', 'Ballgefühl'],
     desc: 'Ball ganz schnell mit den Innenseiten zwischen beiden Füßen antippen – wie eine kleine Glocke.',
-    cues: ['Ganz schnell tippen', 'Innenseiten benutzen', 'Auf den Fußballen', 'Ball ruhig halten'],
+    cues: ['Ball schnell zwischen den Innenseiten tippen', 'Nur kleine, leichte Berührungen', 'Auf den Fußballen bleiben', 'Ball bleibt in der Mitte'],
     kid: 'Klingeln! Tipp den Ball ganz schnell zwischen deinen Füßen hin und her. Schnell, schnell, schnell!',
   },
   {
@@ -117,7 +117,7 @@ const MISSIONS = [
     goal: 20, unit: 'Achten', stars: 3, skill: 'ballControl',
     tags: ['Ballführung', 'Beide Füße'],
     desc: 'Ball in einer Acht um beide Beine führen (durch die Beine und außen herum). Toll für Ballgefühl.',
-    cues: ['Kleine Kontakte', 'Ball nah führen', 'Langsam anfangen', 'Beide Richtungen'],
+    cues: ['Ball in einer Acht führen', 'Kleine Kontakte, Ball bleibt nah', 'Erst langsam die Form üben', 'Dann in beide Richtungen'],
     kid: 'Achterschleife! Führ den Ball in einer Acht um deine Beine. Langsam und sauber. Wie ein Zauberer!',
   },
 
@@ -127,7 +127,7 @@ const MISSIONS = [
     goal: 30, unit: 'Sekunden', stars: 2, skill: 'dribbling',
     tags: ['Tempo', 'Ballführung'],
     desc: 'Mit dem Ball so schnell wie möglich geradeaus laufen – aber der Ball bleibt nah am Fuß.',
-    cues: ['Ball leicht vor dich schieben', 'Nicht zu weit', 'Mit dem Spann/Außenrist', 'Kopf ab und zu hoch'],
+    cues: ['Ball mit dem Spann vor dich schieben', 'Nicht zu weit – in Reichweite halten', 'Schnelle Schritte, Ball bleibt vorne', 'Immer wieder kurz hochschauen'],
     kid: 'Tempo-Dribbling! Lauf so schnell du kannst mit dem Ball. Aber er bleibt bei dir – nicht wegschießen!',
   },
   {
@@ -135,7 +135,7 @@ const MISSIONS = [
     goal: 15, unit: 'Antritte', stars: 3, skill: 'dribbling',
     tags: ['Zweikampf', 'Antritt', 'Deine Stärke'],
     desc: 'Auf ein Hütchen (Gegner) zudribbeln, kurz antäuschen und mit Tempo daran vorbei. Genau deine Stärke!',
-    cues: ['Erst langsam ran', 'Antäuschen', 'Dann explosiv vorbei', 'Ball mitnehmen'],
+    cues: ['Langsam an den Gegner heranfahren', 'Mit dem Körper antäuschen', 'Dann explosiv vorbei', 'Ball sofort mitnehmen'],
     kid: 'Eins gegen eins! Dribbel auf das Hütchen zu, täusch an – und dann ganz schnell vorbei! Das kannst du gut!',
   },
   {
@@ -143,7 +143,7 @@ const MISSIONS = [
     goal: 20, unit: 'Cuts', stars: 3, skill: 'dribbling',
     tags: ['Richtungswechsel', 'Finte'],
     desc: 'Ball antäuschen in eine Richtung und mit der Innenseite scharf in die andere ziehen (abschneiden).',
-    cues: ['Körper täuschen', 'Innenseite quer ziehen', 'Danach sofort weg', 'Beide Füße'],
+    cues: ['Mit der Innenseite quer vor dem Körper ziehen', 'Vorher den Körper täuschen', 'Danach sofort beschleunigen', 'Mit beiden Füßen üben'],
     kid: 'Cut! Tu so, als läufst du geradeaus – und zieh den Ball dann scharf zur Seite weg. Überrasch den Gegner!',
   },
   {
@@ -151,7 +151,7 @@ const MISSIONS = [
     goal: 20, unit: 'Züge', stars: 2, skill: 'dribbling',
     tags: ['Finte', 'Sohle'],
     desc: 'Ball mit der Sohle nach vorne stoppen und blitzschnell wieder zurückziehen – dann in eine andere Richtung.',
-    cues: ['Sohle auf den Ball', 'Zurückziehen', 'Dann drehen', 'Kopf hoch'],
+    cues: ['Sohle oben auf den Ball', 'Ball nach hinten zurückziehen', 'Dann abdrehen und weg', 'Kopf hoch beim Drehen'],
     kid: 'Zurückziehen! Stopp den Ball mit der Sohle und zieh ihn schnell zurück. So drehst du jedem davon!',
   },
 
@@ -161,7 +161,7 @@ const MISSIONS = [
     goal: 25, unit: 'Pässe', stars: 3, skill: 'weakFoot',
     tags: ['Schwacher Fuß', 'Pass'],
     desc: 'Nur mit dem schwächeren Fuß: Ball gegen die Wand passen, annehmen, wieder passen. Sauber und ruhig.',
-    cues: ['Nur schwacher Fuß', 'Innenseite', 'Standbein neben den Ball', 'Lieber langsam & sauber'],
+    cues: ['Nur mit dem schwachen Fuß passen', 'Mit der Innenseite gegen die Wand', 'Standbein zeigt zur Wand', 'Ball ruhig und sauber treffen'],
     kid: 'Schwacher Fuß an der Wand! Spiel den Ball nur mit dem schweren Fuß gegen die Wand. Nimm ihn an, wieder hin. Das macht dich stark!',
   },
   {
@@ -169,7 +169,7 @@ const MISSIONS = [
     goal: 30, unit: 'Sekunden', stars: 3, skill: 'weakFoot',
     tags: ['Schwacher Fuß', 'Dribbling'],
     desc: 'Nur mit dem schwächeren Fuß dribbeln – kleine Kontakte, Innen- und Außenseite.',
-    cues: ['Nur schwacher Fuß', 'Kleine Kontakte', 'Innen und außen', 'Geduldig bleiben'],
+    cues: ['Nur mit dem schwachen Fuß führen', 'Viele kleine Kontakte', 'Innen- und Außenseite nutzen', 'Ruhig bleiben – Übung macht den Meister'],
     kid: 'Schwacher Fuß Dribbling! Führ den Ball nur mit dem schweren Fuß. Klein und sauber. Bald ist er genauso gut!',
   },
 
@@ -179,7 +179,7 @@ const MISSIONS = [
     goal: 30, unit: 'Sekunden', stars: 2, skill: 'coordination',
     tags: ['Koordination', 'Fußarbeit'],
     desc: 'Ohne Ball: ganz schnell auf der Stelle die Füße tippen (wie eine Koordinationsleiter). Auf den Fußballen.',
-    cues: ['Auf den Fußballen', 'Ganz schnell', 'Arme mitnehmen', 'Kleine Schritte'],
+    cues: ['So schnell wie möglich antippen', 'Auf den Fußballen bleiben', 'Kleine, schnelle Schritte', 'Arme locker mitbewegen'],
     kid: 'Schnelle Füße! Tipp ganz schnell mit den Füßen auf den Boden. Wie ein Trommeln. Los, so schnell du kannst!',
   },
   {
@@ -187,7 +187,7 @@ const MISSIONS = [
     goal: 20, unit: 'Stopps', stars: 2, skill: 'coordination',
     tags: ['Balance', 'Kontrolle'],
     desc: 'Ball rollen lassen und mit der Sohle sauber stoppen – kurz auf einem Bein die Balance halten.',
-    cues: ['Sohle sanft auf den Ball', 'Ball ganz ruhig', 'Kurz balancieren', 'Beide Füße'],
+    cues: ['Ball sanft mit der Sohle stoppen', 'Ball liegt sofort ganz still', 'Kurz auf einem Bein balancieren', 'Mit beiden Füßen stoppen'],
     kid: 'Stoppen! Lass den Ball rollen und stopp ihn mit der Sohle. Ganz ruhig. Und halt kurz die Balance!',
   },
   {
@@ -195,7 +195,7 @@ const MISSIONS = [
     goal: 12, unit: 'Sprints', stars: 3, skill: 'coordination',
     tags: ['Antritt', 'Deine Stärke'],
     desc: 'Aus dem Stand explosiv mit dem Ball lossprinten (ein paar Meter), stoppen, zurück. Genau dein Ding!',
-    cues: ['Explosiv starten', 'Erste Schritte schnell', 'Ball mitnehmen', 'Sauber stoppen'],
+    cues: ['Explosiv aus dem Stand losspurten', 'Erste drei Schritte ganz schnell', 'Ball mit dem ersten Kontakt mitnehmen', 'Sauber wieder abstoppen'],
     kid: 'Antritt! Steh still – und dann sprint explosiv mit dem Ball los! Schnell wie eine Rakete. Das ist deine Stärke!',
   },
 
@@ -205,7 +205,7 @@ const MISSIONS = [
     goal: 30, unit: 'Pässe', stars: 2, skill: 'coordination',
     tags: ['Pass', 'Beide Füße'],
     desc: 'Ball mit der Innenseite gegen die Wand passen, annehmen, wieder passen – rechts und links.',
-    cues: ['Innenseite', 'Standbein zeigt zur Wand', 'Ball ruhig treffen', 'Beide Füße'],
+    cues: ['Mit der Innenseite gegen die Wand passen', 'Standbein zeigt zur Wand', 'Ball flach und mittig treffen', 'Rückpass direkt annehmen'],
     kid: 'Passen! Spiel den Ball mit der Innenseite gegen die Wand. Nimm ihn an, wieder hin. Rechts und links!',
   },
   {
@@ -213,7 +213,7 @@ const MISSIONS = [
     goal: 15, unit: 'Schüsse', stars: 3, skill: 'coordination',
     tags: ['Schuss', 'Abschluss'],
     desc: 'Ball hinlegen, kurz Anlauf nehmen und mit dem Vollspann aufs Tor (oder eine Markierung) schießen.',
-    cues: ['Standbein neben den Ball', 'Mit dem Spann treffen', 'Fuß fest', 'Aufs Ziel schauen'],
+    cues: ['Standbein neben den Ball', 'Mit dem Spann (Schnürsenkel) treffen', 'Fußgelenk fest, Zehen nach unten', 'Aufs Ziel schauen, dann durchziehen'],
     kid: 'Torschuss! Leg den Ball hin, kurzer Anlauf – und schieß mit den Schnürsenkeln aufs Tor. Zeig deinen harten Schuss!',
   },
 ];
