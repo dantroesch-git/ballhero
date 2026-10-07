@@ -293,42 +293,72 @@ function academyMissions() {
   return ids.map(id => MISSIONS.find(m => m.id === id)).filter(Boolean);
 }
 
-/* ---------------- Ort (drinnen/draußen) + Tagesplan (2/Tag) ---------------- */
+/* ---------------- Ort (drinnen/draußen) ---------------- */
 function locationPref() { return (S.progress && S.progress.location) || 'drinnen'; }
 function indoorOk(m) { return m.space === 'zimmer'; }
-function dayOfYear() { const d = new Date(); return Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000); }
-const DAILY_COUNT = 2;
+/* Platz-Übung → Zimmer-Alternative (gleiche Skill-Richtung), wenn „Drinnen" */
+const INDOOR_ALT = { slalom: 'solerolls', speeddribble: 'insideout', onevone: 'stepover', sprintball: 'bells', shot: 'striking' };
+function indoorize(m) {
+  if (!m || m.space === 'zimmer') return m;
+  const alt = INDOOR_ALT[m.id];
+  return (alt && MISSIONS.find(x => x.id === alt)) || m;
+}
 
-/* Genau 2 Übungen für heute — passend zum Ort, täglich rotierend, pro Tag stabil. */
+/* ---------------- 30-Tage-Aufbaukurs ---------------- */
+/* Fester Aufbau: leicht → schwer. 2 Übungen/Tag. Ziele skalieren per Alter (goalFor). */
+const PLAN_DAYS = 30;
+const CURRICULUM = [
+  ['toetaps', 'foundations'], ['solerolls', 'insideout'], ['foundations', 'bells'],
+  ['toetaps', 'stopball'], ['insideout', 'quickfeet'], ['bells', 'solerolls'],
+  ['toetaps', 'foundations'],                                  // Tag 7 – Meilenstein
+  ['weakfoot', 'dragback'], ['foundations', 'cutinside'], ['figure8', 'weakdribble'],
+  ['dragback', 'wallpass'], ['cutinside', 'bells'], ['weakfoot', 'quickfeet'],
+  ['figure8', 'foundations'],                                  // Tag 14 – Meilenstein
+  ['stepover', 'insideout'], ['croqueta', 'toetaps'], ['cutinside', 'trick'],
+  ['onevone', 'dragback'], ['slalom', 'figure8'], ['speeddribble', 'quickfeet'],
+  ['stepover', 'croqueta'],                                    // Tag 21
+  ['striking', 'foundations'], ['shot', 'stopball'], ['onevone', 'cutinside'],
+  ['sprintball', 'quickfeet'], ['weakwall', 'weakfoot'], ['striking', 'croqueta'],
+  ['speeddribble', 'stepover'], ['onevone', 'figure8'], ['shot', 'toetaps'], // Tag 30 – Finale
+];
+const PLAN_MILESTONES = { 7: '🥉 Woche 1 geschafft!', 14: '🥈 Halbzeit – Tag 14!', 21: '🏅 Woche 3 geschafft!', 30: '🏆 30 Tage – Kurs gemeistert!' };
+
+function plan30() {
+  const p = S.progress;
+  if (!p.plan30) p.plan30 = { completed: 0, lastDate: null, startedAt: todayKey() };
+  return p.plan30;
+}
+function planFinished() { return plan30().completed >= PLAN_DAYS; }
+function planDoneToday() { return plan30().lastDate === todayKey(); }
+/* Tag, der HEUTE angezeigt wird (1..30) */
+function planActiveDay() {
+  const s = plan30();
+  if (planFinished()) return PLAN_DAYS;
+  return planDoneToday() ? Math.max(1, s.completed) : Math.min(PLAN_DAYS, s.completed + 1);
+}
+
+/* Die 2 Übungen des aktuellen Kurs-Tages — ortsangepasst, pro Tag stabil. */
 function todaysMissions() {
   const p = S.progress;
-  const loc = locationPref();
-  if (p.today && p.today.planIds && p.today.planDate === p.today.date && p.today.planLoc === loc) {
-    const got = p.today.planIds.map(id => MISSIONS.find(m => m.id === id)).filter(Boolean);
-    if (got.length) return got;
+  const ids = CURRICULUM[planActiveDay() - 1] || CURRICULUM[PLAN_DAYS - 1];
+  let miss = ids.map(id => MISSIONS.find(m => m.id === id)).filter(Boolean);
+  if (locationPref() === 'drinnen') miss = miss.map(indoorize);
+  let uniq = [...new Map(miss.map(m => [m.id, m])).values()];
+  // Falls Ort-Ersatz eine Dublette erzeugt hat: mit einer Zimmer-Übung auffüllen
+  if (uniq.length < 2) {
+    const extra = MISSIONS.find(m => indoorOk(m) && !uniq.some(u => u.id === m.id));
+    if (extra) uniq.push(extra);
   }
-  let pool = academyMissions();
-  if (loc === 'drinnen') {
-    const indoor = pool.filter(indoorOk);
-    if (indoor.length >= DAILY_COUNT) pool = indoor;
+  if (p.today) {
+    p.today.planIds = uniq.map(m => m.id);
+    p.today.planDate = p.today.date;
+    save();
   }
-  const pick = [];
-  if (pool.length) {
-    const off = (dayOfYear() * DAILY_COUNT) % pool.length;
-    for (let i = 0; i < DAILY_COUNT && i < pool.length; i++) pick.push(pool[(off + i) % pool.length]);
-  }
-  const uniq = [...new Map(pick.map(m => [m.id, m])).values()];
-  p.today.planIds = uniq.map(m => m.id);
-  p.today.planDate = p.today.date;
-  p.today.planLoc = loc;
-  save();
   return uniq;
 }
 function setLocation(loc) {
   if (!S.progress) return;
   S.progress.location = loc;
-  // Tagesplan neu wählen für den neuen Ort
-  if (S.progress.today) { S.progress.today.planIds = null; }
   save();
   renderHome();
   haptic(12);
@@ -670,6 +700,7 @@ function freshProgress() {
     gear: { ball: true, wand: true, huetchen: false, minitor: false },
     medals: {},        // missionId -> 'bronze'|'silver'|'gold' (beste)
     location: 'drinnen',
+    plan30: { completed: 0, lastDate: null, startedAt: todayKey() },  // 30-Tage-Kurs
   };
 }
 
@@ -682,6 +713,7 @@ function migrateProgress(p) {
   if (!p.gear) p.gear = { ball: true, wand: true, huetchen: false, minitor: false };
   if (!p.medals) p.medals = {};
   if (!p.location) p.location = 'drinnen';
+  if (!p.plan30) p.plan30 = { completed: 0, lastDate: null, startedAt: todayKey() };
   // Persönlichen Plan einmalig aktiv setzen (aus der Video-Analyse)
   if (!p.planSet) { p.academy = 'personal'; p.planSet = true; }
 }
@@ -918,6 +950,7 @@ function renderHome() {
 
   renderAcademyRow();
   renderLocToggle();
+  renderPlanCard();
 
   // Heute: genau 2 Übungen, passend zum Ort
   const missions = todaysMissions();
@@ -947,7 +980,42 @@ function renderHome() {
     list.appendChild(el);
   });
 
-  document.getElementById('allDoneCard').style.display = (doneCount === total && total > 0) ? 'block' : 'none';
+  const card = document.getElementById('allDoneCard');
+  if (planFinished()) {
+    card.style.display = 'block';
+    card.innerHTML = '<div style="font-size:2.6rem">🏆</div><h3>30-Tage-Kurs gemeistert!</h3>' +
+      '<p class="small">Stark durchgehalten! Du kannst jederzeit frei weitertrainieren.</p>';
+  } else if (planDoneToday()) {
+    card.style.display = 'block';
+    card.innerHTML = '<div style="font-size:2.6rem">✅</div><h3>Tag ' + planActiveDay() + ' geschafft!</h3>' +
+      '<p class="small">Komm morgen wieder für Tag ' + (planActiveDay() + 1) + ' von ' + PLAN_DAYS + '.</p>';
+  } else {
+    card.style.display = 'none';
+  }
+}
+
+/* 30-Tage-Kurs-Karte: „Tag X von 30" + Fortschritts-Reihe */
+function renderPlanCard() {
+  const el = document.getElementById('planCard');
+  if (!el) return;
+  const s = plan30();
+  const day = planActiveDay();
+  const done = s.completed;
+  const finished = planFinished();
+  const title = finished ? '🏆 Kurs gemeistert!' : '📅 Tag ' + day + ' von ' + PLAN_DAYS;
+  const sub = finished ? '30 Tage durchgezogen – Hero-Status!'
+    : (planDoneToday() ? 'Heute geschafft ✅ — morgen geht\'s mit Tag ' + (day + 1) + ' weiter'
+      : 'Dein 30-Tage-Weg zum Ball-Hero');
+  let dots = '';
+  for (let i = 1; i <= PLAN_DAYS; i++) {
+    const isCur = i === day && !planDoneToday() && !finished;
+    const cls = i <= done ? 'done' : (isCur ? 'cur' : (PLAN_MILESTONES[i] ? 'mile' : ''));
+    dots += '<span class="pd ' + cls + '"' + (PLAN_MILESTONES[i] ? ' title="' + PLAN_MILESTONES[i] + '"' : '') + '></span>';
+  }
+  el.innerHTML =
+    '<div class="plan-top"><div><div class="plan-title">' + title + '</div>' +
+    '<div class="small">' + sub + '</div></div><div class="plan-badge">' + done + '/' + PLAN_DAYS + '</div></div>' +
+    '<div class="plan-strip">' + dots + '</div>';
 }
 
 /* Ort-Umschalter (drinnen/draußen) */
@@ -2098,13 +2166,27 @@ function completeMission(m, reps, seconds, extra) {
     if (!prev || MEDAL_RANK[medal] > MEDAL_RANK[prev]) { p.medals[m.id] = medal; medalUp = true; }
   }
 
+  // 30-Tage-Kurs: Tag abschließen, wenn beide Tages-Übungen erledigt (max 1×/Tag)
+  let planMilestone = null, planDayDone = false;
+  const plan = plan30();
+  if (!planFinished() && plan.lastDate !== tk) {
+    if (!p.today.planIds) todaysMissions();
+    const ids = p.today.planIds || [];
+    if (ids.length && ids.every(id => p.today.doneIds.includes(id))) {
+      plan.completed = Math.min(PLAN_DAYS, plan.completed + 1);
+      plan.lastDate = tk;
+      planDayDone = true;
+      if (PLAN_MILESTONES[plan.completed]) planMilestone = PLAN_MILESTONES[plan.completed];
+    }
+  }
+
   // Level-up? Neue Trophäen?
   const leveledUp = rankFor(p.xp).idx > rankFor(xpBefore).idx;
   const newBadges = checkBadges(p);
 
   save();
   renderHome(); renderProgress(); renderParent();
-  showReward(m, reps, starsEarned, extra, { leveledUp, newBadges, medal, medalUp });
+  showReward(m, reps, starsEarned, extra, { leveledUp, newBadges, medal, medalUp, planDayDone, planMilestone });
 }
 
 /* ---------------- Reward ---------------- */
@@ -2120,6 +2202,11 @@ function showReward(m, reps, stars, extra, celebrate) {
   document.getElementById('rewardStars').textContent = stars > 0 ? '⭐️'.repeat(stars) : '+' + (Math.round(reps / 4) + 5) + ' XP';
 
   let extraHtml = '';
+  if (celebrate.planMilestone) {
+    extraHtml += '<div class="reward-milestone">' + celebrate.planMilestone + '</div>';
+  } else if (celebrate.planDayDone) {
+    extraHtml += '<div class="reward-planday">📅 Tag geschafft — weiter im 30-Tage-Kurs!</div>';
+  }
   if (celebrate.medal) {
     extraHtml += '<div class="reward-medal">' + MEDAL_EMOJI[celebrate.medal] + ' ' +
       (celebrate.medalUp ? 'Neue Bestleistung: ' : '') + MEDAL_LABEL[celebrate.medal] + '-Medaille!</div>';
@@ -2140,6 +2227,7 @@ function showReward(m, reps, stars, extra, celebrate) {
   if (leveledUp) { confetti(80); sfx.levelup(); }
   else { confetti(stars >= 3 ? 60 : 40); sfx.success(); }
   if (newBadges.length) setTimeout(() => { sfx.badge(); confetti(30); }, 600);
+  if (celebrate.planMilestone) setTimeout(() => { sfx.levelup && sfx.levelup(); confetti(90); haptic([30, 40, 60]); }, 500);
 
   // Ansage laut — Level-up und Trophäen zuerst, dann Lob + ein Tipp
   let spoken = '';

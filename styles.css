@@ -445,6 +445,19 @@ select:focus { outline: 2px solid var(--primary); }
 .ob-nav { display: flex; gap: 10px; }
 .ob-nav .btn { flex: 1; }
 
+/* 30-Tage-Aufbaukurs */
+.plan-card { background: linear-gradient(135deg, #2a2160, #1b1340); }
+.plan-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.plan-title { font-weight: 800; font-size: 1.1rem; }
+.plan-badge { background: var(--primary); color: var(--primary-ink); font-weight: 800; border-radius: 999px; padding: 4px 12px; font-size: 0.9rem; white-space: nowrap; }
+.plan-strip { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+.plan-strip .pd { width: 14px; height: 14px; border-radius: 50%; background: var(--line); }
+.plan-strip .pd.done { background: var(--green); }
+.plan-strip .pd.cur { background: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 35%, transparent); }
+.plan-strip .pd.mile { background: transparent; border: 2px solid var(--primary); }
+.reward-milestone { font-weight: 800; font-size: 1.15rem; margin: 8px 0; color: var(--primary); }
+.reward-planday { font-weight: 700; font-size: 0.95rem; margin: 6px 0; color: var(--muted); }
+
 /* Ort-Umschalter (drinnen/draußen) */
 .loc-toggle { display: flex; gap: 10px; margin-bottom: 14px; }
 .loc-chip {
