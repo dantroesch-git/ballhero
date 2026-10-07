@@ -423,7 +423,7 @@ function ageBand(age) {
   if (age <= 8) return 'f';      // 7–8: + erster Kontakt, schwacher Fuß, Kopf hoch
   return 'older';
 }
-const AGE_FACTOR = { mini: 0.3, g: 0.55, f: 0.8, older: 1 };
+const AGE_FACTOR = { mini: 0.3, g: 0.45, f: 0.8, older: 1 };
 /* alters-skaliertes Ziel einer Übung (kleine, machbare Häppchen) */
 function goalFor(m) {
   const f = AGE_FACTOR[ageBand()] || 1;
