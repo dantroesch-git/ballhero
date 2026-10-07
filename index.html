@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="BallHero">
   <title>BallHero Kids</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=26">
+  <link rel="stylesheet" href="styles.css?v=27">
 </head>
 <body>
   <div id="app">
@@ -74,11 +74,15 @@
       <div class="academy-row" id="academyRow"></div>
       <div class="small academy-philo" id="academyPhilo"></div>
 
+      <!-- Wo trainierst du heute? -->
+      <div class="section-label">📍 Wo trainierst du heute?</div>
+      <div class="loc-toggle" id="locToggle"></div>
+
       <div class="card" style="background:linear-gradient(135deg,#242c66,#1a2050)">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div>
-            <h3 style="margin-bottom:2px">Heutige Missionen</h3>
-            <div class="small" id="homeProgressLbl">0 / 6 erledigt</div>
+            <h3 style="margin-bottom:2px">Heute dran</h3>
+            <div class="small" id="homeProgressLbl">0 / 2 erledigt</div>
           </div>
           <div class="chip xp" id="homeTodayStars">⭐ 0</div>
         </div>
@@ -271,6 +275,16 @@
           <span class="small" id="badgeCount">0 / 0</span>
         </div>
         <div class="badge-grid" id="badgeGrid"></div>
+      </div>
+
+      <!-- Medaillenspiegel (Leistungs-Medaillen pro Übung) -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="margin:0">🏅 Medaillenspiegel</h3>
+          <span class="small" id="medalTotal"></span>
+        </div>
+        <div class="medal-tally" id="medalTally"></div>
+        <div class="medal-grid" id="medalGrid"></div>
       </div>
 
       <div class="stat-grid">
@@ -514,7 +528,7 @@
     <div id="confetti"></div>
   </div>
 
-  <script src="demos.js?v=26"></script>
-  <script src="app.js?v=26"></script>
+  <script src="demos.js?v=27"></script>
+  <script src="app.js?v=27"></script>
 </body>
 </html>

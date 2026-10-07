@@ -445,6 +445,32 @@ select:focus { outline: 2px solid var(--primary); }
 .ob-nav { display: flex; gap: 10px; }
 .ob-nav .btn { flex: 1; }
 
+/* Ort-Umschalter (drinnen/draußen) */
+.loc-toggle { display: flex; gap: 10px; margin-bottom: 14px; }
+.loc-chip {
+  flex: 1; padding: 12px; border-radius: var(--radius-sm); border: 2px solid var(--line);
+  background: var(--card-2); color: var(--text); font-weight: 700; font-size: 0.95rem; cursor: pointer;
+}
+.loc-chip.on { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 18%, var(--card-2)); }
+.loc-chip:active { transform: scale(0.98); }
+
+/* Medaille auf der Übungskarte */
+.m-medal { font-size: 0.95rem; }
+
+/* Medaille im Reward-Overlay */
+.reward-medal { font-weight: 800; font-size: 1.05rem; margin: 6px 0; }
+
+/* Medaillenspiegel */
+.medal-tally { display: flex; gap: 10px; margin: 12px 0 6px; }
+.mt-item { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; background: var(--card-2); border-radius: 12px; padding: 10px; }
+.mt-item .mt-e { font-size: 1.3rem; }
+.mt-item .mt-n { font-weight: 800; font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+.medal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 8px; margin-top: 10px; }
+.medal-cell { position: relative; aspect-ratio: 1; border-radius: 12px; background: var(--card-2); display: grid; place-items: center; }
+.medal-cell .mc-ex { font-size: 1.5rem; }
+.medal-cell .mc-med { position: absolute; bottom: 2px; right: 3px; font-size: 0.9rem; }
+.medal-cell.empty { opacity: 0.4; }
+
 /* Profi-Coach-Analyse (Karte + Report) */
 .analysis-card { background: linear-gradient(135deg, #2a2166, #1a2050); }
 .report-hero { text-align: center; padding: 6px 0 4px; }

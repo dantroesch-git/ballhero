@@ -293,6 +293,94 @@ function academyMissions() {
   return ids.map(id => MISSIONS.find(m => m.id === id)).filter(Boolean);
 }
 
+/* ---------------- Ort (drinnen/draußen) + Tagesplan (2/Tag) ---------------- */
+function locationPref() { return (S.progress && S.progress.location) || 'drinnen'; }
+function indoorOk(m) { return m.space === 'zimmer'; }
+function dayOfYear() { const d = new Date(); return Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000); }
+const DAILY_COUNT = 2;
+
+/* Genau 2 Übungen für heute — passend zum Ort, täglich rotierend, pro Tag stabil. */
+function todaysMissions() {
+  const p = S.progress;
+  const loc = locationPref();
+  if (p.today && p.today.planIds && p.today.planDate === p.today.date && p.today.planLoc === loc) {
+    const got = p.today.planIds.map(id => MISSIONS.find(m => m.id === id)).filter(Boolean);
+    if (got.length) return got;
+  }
+  let pool = academyMissions();
+  if (loc === 'drinnen') {
+    const indoor = pool.filter(indoorOk);
+    if (indoor.length >= DAILY_COUNT) pool = indoor;
+  }
+  const pick = [];
+  if (pool.length) {
+    const off = (dayOfYear() * DAILY_COUNT) % pool.length;
+    for (let i = 0; i < DAILY_COUNT && i < pool.length; i++) pick.push(pool[(off + i) % pool.length]);
+  }
+  const uniq = [...new Map(pick.map(m => [m.id, m])).values()];
+  p.today.planIds = uniq.map(m => m.id);
+  p.today.planDate = p.today.date;
+  p.today.planLoc = loc;
+  save();
+  return uniq;
+}
+function setLocation(loc) {
+  if (!S.progress) return;
+  S.progress.location = loc;
+  // Tagesplan neu wählen für den neuen Ort
+  if (S.progress.today) { S.progress.today.planIds = null; }
+  save();
+  renderHome();
+  haptic(12);
+}
+
+/* ---------------- Medaillen (Leistung pro Übung) ---------------- */
+const MEDAL_EMOJI = { gold: '🥇', silver: '🥈', bronze: '🥉' };
+const MEDAL_RANK = { bronze: 1, silver: 2, gold: 3 };
+const MEDAL_LABEL = { gold: 'Gold', silver: 'Silber', bronze: 'Bronze' };
+/* Ziel erreicht = Bronze, 1,5× = Silber, 2× = Gold */
+function medalFor(m, reps) {
+  const g = goalFor(m);
+  if (reps >= g * 2) return 'gold';
+  if (reps >= Math.round(g * 1.5)) return 'silver';
+  if (reps >= g) return 'bronze';
+  return null;
+}
+function medalCounts() {
+  const med = (S.progress && S.progress.medals) || {};
+  const c = { gold: 0, silver: 0, bronze: 0 };
+  Object.values(med).forEach(v => { if (c[v] != null) c[v]++; });
+  return c;
+}
+function renderMedalCabinet() {
+  const tally = document.getElementById('medalTally');
+  const gridEl = document.getElementById('medalGrid');
+  if (!tally) return;
+  const med = (S.progress && S.progress.medals) || {};
+  const c = medalCounts();
+  const total = c.gold + c.silver + c.bronze;
+  const totalEl = document.getElementById('medalTotal');
+  if (totalEl) totalEl.textContent = total + ' / ' + MISSIONS.length + ' Übungen';
+  tally.innerHTML =
+    '<div class="mt-item"><span class="mt-e">🥇</span><span class="mt-n">' + c.gold + '</span></div>' +
+    '<div class="mt-item"><span class="mt-e">🥈</span><span class="mt-n">' + c.silver + '</span></div>' +
+    '<div class="mt-item"><span class="mt-e">🥉</span><span class="mt-n">' + c.bronze + '</span></div>';
+  // Übungen mit Medaille zuerst, dann die ohne (abgeblendet)
+  const withM = MISSIONS.filter(m => med[m.id]);
+  const noM = MISSIONS.filter(m => !med[m.id]);
+  if (!gridEl) return;
+  if (!total) {
+    gridEl.innerHTML = '<p class="small" style="margin:10px 2px 0">Noch keine Medaille — erreiche das Ziel einer Übung für 🥉, das Doppelte für 🥇.</p>';
+    return;
+  }
+  gridEl.innerHTML = withM.concat(noM).map(m => {
+    const v = med[m.id];
+    return '<div class="medal-cell' + (v ? '' : ' empty') + '" title="' + m.title + '">' +
+      '<span class="mc-ex">' + m.emoji + '</span>' +
+      '<span class="mc-med">' + (v ? MEDAL_EMOJI[v] : '▫️') + '</span></div>';
+  }).join('');
+}
+
 /* ===========================================================
    ALTERSGERECHT — Ziele & Plan hängen vom Alter des Kindes ab.
    Grundlage: FUNdamentals-Phase, FFF/La Masia/Ajax für die Kleinen.
@@ -508,7 +596,7 @@ const BADGES = [
   { id: 'streak7',  emoji: '🌈', name: '7 Tage am Ball',      test: p => p.streak >= 7 },
   { id: 'juggler',  emoji: '🤹', name: 'Jongleur',           test: p => p.history.some(h => h.missionId === 'juggling') },
   { id: 'weakhero', emoji: '🦶', name: 'Schwacher-Fuß-Held', test: p => skillSessions(p, 'weakFoot') >= 8 },
-  { id: 'allday',   emoji: '🏆', name: 'Tag geschafft',       test: p => { const a = ACADEMIES.find(x => x.id === (p.academy || 'allround')) || ACADEMIES[0]; return a.missions.every(id => p.today.doneIds.includes(id)); } },
+  { id: 'allday',   emoji: '🏆', name: 'Tag geschafft',       test: p => { const ids = (p.today && p.today.planIds) || []; return ids.length > 0 && ids.every(id => p.today.doneIds.includes(id)); } },
   { id: 'k500',     emoji: '⚡️', name: '500 Kontakte',        test: p => p.totalContacts >= 500 },
   { id: 'k2000',    emoji: '💫', name: '2000 Kontakte',       test: p => p.totalContacts >= 2000 },
 ];
@@ -580,6 +668,8 @@ function freshProgress() {
     academy: 'personal',
     planSet: true,
     gear: { ball: true, wand: true, huetchen: false, minitor: false },
+    medals: {},        // missionId -> 'bronze'|'silver'|'gold' (beste)
+    location: 'drinnen',
   };
 }
 
@@ -590,6 +680,8 @@ function migrateProgress(p) {
   if (p.videoCount === undefined) p.videoCount = 0;
   if (!p.academy) p.academy = 'allround';
   if (!p.gear) p.gear = { ball: true, wand: true, huetchen: false, minitor: false };
+  if (!p.medals) p.medals = {};
+  if (!p.location) p.location = 'drinnen';
   // Persönlichen Plan einmalig aktiv setzen (aus der Video-Analyse)
   if (!p.planSet) { p.academy = 'personal'; p.planSet = true; }
 }
@@ -825,32 +917,50 @@ function renderHome() {
   document.getElementById('rankBar').style.width = Math.round(rk.progress * 100) + '%';
 
   renderAcademyRow();
+  renderLocToggle();
 
-  // Heutige Missionen = Übungen des gewählten Stils
-  const missions = academyMissions();
+  // Heute: genau 2 Übungen, passend zum Ort
+  const missions = todaysMissions();
   const done = p.today.doneIds;
+  const medals = p.medals || {};
   const doneCount = missions.filter(m => done.includes(m.id)).length;
-  document.getElementById('homeProgressLbl').textContent = doneCount + ' / ' + missions.length + ' erledigt';
+  const total = missions.length || DAILY_COUNT;
+  document.getElementById('homeProgressLbl').textContent = doneCount + ' / ' + total + ' erledigt';
   document.getElementById('homeTodayStars').textContent = '⭐ ' + p.today.stars;
-  document.getElementById('homeDayBar').style.width = Math.round(doneCount / missions.length * 100) + '%';
+  document.getElementById('homeDayBar').style.width = Math.round(doneCount / total * 100) + '%';
 
   const list = document.getElementById('missionList');
   list.innerHTML = '';
   missions.forEach(m => {
     const isDone = done.includes(m.id);
+    const med = medals[m.id];
     const el = document.createElement('div');
     el.className = 'mission' + (isDone ? ' done' : '');
     el.dataset.cat = m.cat;
     el.innerHTML =
       '<div class="emoji">' + m.emoji + '</div>' +
-      '<div class="body"><div class="title">' + m.title + '</div>' +
-      '<div class="meta">' + goalFor(m) + ' ' + m.unit + '</div></div>' +
+      '<div class="body"><div class="title">' + m.title +
+        (med ? ' <span class="m-medal" title="Beste Medaille">' + MEDAL_EMOJI[med] + '</span>' : '') + '</div>' +
+      '<div class="meta">' + goalFor(m) + ' ' + m.unit + (m.space === 'zimmer' ? ' · 🏠' : ' · 📏') + '</div></div>' +
       (isDone ? '<div class="check">✓</div>' : '<div class="stars">+' + m.stars + '⭐</div>');
     el.onclick = () => { sfx.pop(); haptic(14); openMission(m.id, 'home'); };
     list.appendChild(el);
   });
 
-  document.getElementById('allDoneCard').style.display = doneCount === missions.length ? 'block' : 'none';
+  document.getElementById('allDoneCard').style.display = (doneCount === total && total > 0) ? 'block' : 'none';
+}
+
+/* Ort-Umschalter (drinnen/draußen) */
+function renderLocToggle() {
+  const box = document.getElementById('locToggle');
+  if (!box) return;
+  const loc = locationPref();
+  box.innerHTML =
+    '<button class="loc-chip' + (loc === 'drinnen' ? ' on' : '') + '" data-loc="drinnen">🏠 Drinnen</button>' +
+    '<button class="loc-chip' + (loc === 'draußen' ? ' on' : '') + '" data-loc="draußen">🌳 Draußen</button>';
+  box.querySelectorAll('.loc-chip').forEach(b => {
+    b.onclick = () => { if (b.dataset.loc !== loc) setLocation(b.dataset.loc); };
+  });
 }
 
 /* ---------------- Übungs-Bibliothek ---------------- */
@@ -1979,13 +2089,22 @@ function completeMission(m, reps, seconds, extra) {
     p.today.stars += starsEarned;
   }
 
+  // Medaille (Leistung): beste pro Übung merken
+  if (!p.medals) p.medals = {};
+  const medal = medalFor(m, reps);
+  let medalUp = false;
+  if (medal) {
+    const prev = p.medals[m.id];
+    if (!prev || MEDAL_RANK[medal] > MEDAL_RANK[prev]) { p.medals[m.id] = medal; medalUp = true; }
+  }
+
   // Level-up? Neue Trophäen?
   const leveledUp = rankFor(p.xp).idx > rankFor(xpBefore).idx;
   const newBadges = checkBadges(p);
 
   save();
   renderHome(); renderProgress(); renderParent();
-  showReward(m, reps, starsEarned, extra, { leveledUp, newBadges });
+  showReward(m, reps, starsEarned, extra, { leveledUp, newBadges, medal, medalUp });
 }
 
 /* ---------------- Reward ---------------- */
@@ -2001,6 +2120,10 @@ function showReward(m, reps, stars, extra, celebrate) {
   document.getElementById('rewardStars').textContent = stars > 0 ? '⭐️'.repeat(stars) : '+' + (Math.round(reps / 4) + 5) + ' XP';
 
   let extraHtml = '';
+  if (celebrate.medal) {
+    extraHtml += '<div class="reward-medal">' + MEDAL_EMOJI[celebrate.medal] + ' ' +
+      (celebrate.medalUp ? 'Neue Bestleistung: ' : '') + MEDAL_LABEL[celebrate.medal] + '-Medaille!</div>';
+  }
   if (leveledUp) {
     const r = rankFor(S.progress.xp).rank;
     extraHtml += '<div class="reward-level">' + r.emoji + ' Du bist jetzt <b>' + r.name + '</b>!</div>';
@@ -2083,6 +2206,9 @@ function renderProgress() {
       '<div class="badge-emoji">' + (has ? b.emoji : '🔒') + '</div>' +
       '<div class="badge-name">' + b.name + '</div></div>';
   }).join('');
+
+  // Medaillenspiegel
+  renderMedalCabinet();
 
   ['ballControl', 'weakFoot', 'dribbling', 'coordination'].forEach(k => {
     const v = Math.round(p.skills[k] || 0);
