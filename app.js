@@ -623,7 +623,43 @@ function boot() {
     document.addEventListener('pointerdown', () => setTimeout(greetHome, 120), { once: true });
   } else {
     go('welcome');
+    let seen = false;
+    try { seen = localStorage.getItem('ballhero.onboarded') === '1'; } catch (e) {}
+    if (!seen) showOnboarding(false);
   }
+}
+
+/* ---------------- Eltern-Onboarding (Willkommens-Tour) ---------------- */
+const OB_SLIDES = [
+  { emoji: '⚽️', title: 'Willkommen bei BallHero', text: 'Der tägliche Technik-Coach für dein Kind. Kleine Missionen, echter Fortschritt — Schritt für Schritt besser am Ball.' },
+  { emoji: '🎥', title: 'So trainiert ihr', text: 'Übung wählen, Animation & Beispielvideo anschauen, dann mit der Kamera aufnehmen. Handy hochkant anlehnen und ca. 3 Schritte zurück — die App zählt von allein los.' },
+  { emoji: '🔍', title: 'Gemeinsam besser werden', text: 'Schaut die Aufnahme danach in Zeitlupe an und hakt zusammen ab, was schon klappt. So sieht dein Kind genau, was gut war und woran es noch arbeitet.' },
+  { emoji: '🔒', title: 'Sicher & einfach', text: 'Alle Videos und Daten bleiben nur auf diesem Gerät. Keine Anmeldung, keine Werbung. Los geht\'s!' },
+];
+let obI = 0, obReplay = false;
+function showOnboarding(replay) {
+  obReplay = !!replay; obI = 0;
+  renderOb();
+  document.getElementById('onboarding').classList.add('show');
+}
+function renderOb() {
+  const s = OB_SLIDES[obI];
+  document.getElementById('obSlide').innerHTML =
+    '<div class="ob-emoji">' + s.emoji + '</div><h2>' + s.title + '</h2><p>' + s.text + '</p>';
+  document.getElementById('obDots').innerHTML =
+    OB_SLIDES.map((_, i) => '<span class="' + (i === obI ? 'on' : '') + '"></span>').join('');
+  document.getElementById('obBack').style.visibility = obI === 0 ? 'hidden' : 'visible';
+  document.getElementById('obNext').textContent = obI === OB_SLIDES.length - 1 ? 'Los geht\'s ⚽️' : 'Weiter ›';
+  document.getElementById('obSkip').style.display = obI === OB_SLIDES.length - 1 ? 'none' : '';
+}
+function obNext() {
+  if (obI < OB_SLIDES.length - 1) { obI++; renderOb(); if (sfx.pop) sfx.pop(); haptic(10); }
+  else finishOnboarding();
+}
+function obBack() { if (obI > 0) { obI--; renderOb(); } }
+function finishOnboarding() {
+  document.getElementById('onboarding').classList.remove('show');
+  try { localStorage.setItem('ballhero.onboarded', '1'); } catch (e) {}
 }
 
 function ensureDaily() {
@@ -2332,6 +2368,12 @@ function toast(msg) {
 /* ---------------- Events ---------------- */
 function wireStaticEvents() {
   document.getElementById('createProfile').onclick = createProfile;
+
+  // --- Onboarding (Willkommens-Tour) ---
+  document.getElementById('obNext').onclick = obNext;
+  document.getElementById('obBack').onclick = obBack;
+  document.getElementById('obSkip').onclick = finishOnboarding;
+  document.getElementById('obReplayBtn').onclick = () => showOnboarding(true);
 
   document.getElementById('missionBack').onclick = () => { stopSpeaking(); go(missionFrom); };
   document.getElementById('startCamera').onclick = () => { stopSpeaking(); openCamera(); };

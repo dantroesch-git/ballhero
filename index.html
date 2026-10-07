@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="BallHero">
   <title>BallHero Kids</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=25">
+  <link rel="stylesheet" href="styles.css?v=26">
 </head>
 <body>
   <div id="app">
@@ -311,6 +311,8 @@
       <h1>Eltern-Dashboard</h1>
       <p class="small">Überblick für die Woche</p>
 
+      <button class="btn ghost sm" id="obReplayBtn" style="align-self:flex-start;margin-bottom:10px">❓ So funktioniert's</button>
+
       <!-- Profi-Coach-Analyse (Report + Trigger) -->
       <div class="card analysis-card" id="analysisCard"></div>
 
@@ -475,6 +477,19 @@
     </div>
 
     <!-- ============ PROFIL-WÄHLER ============ -->
+    <!-- ============ ELTERN-ONBOARDING (Willkommens-Tour) ============ -->
+    <div class="reward" id="onboarding">
+      <div class="box ob-box">
+        <button class="ob-skip" id="obSkip">Überspringen</button>
+        <div class="ob-slide" id="obSlide"></div>
+        <div class="ob-dots" id="obDots"></div>
+        <div class="ob-nav">
+          <button class="btn ghost" id="obBack">‹ Zurück</button>
+          <button class="btn" id="obNext">Weiter ›</button>
+        </div>
+      </div>
+    </div>
+
     <div class="reward" id="profileChooser">
       <div class="box" style="width:100%;max-width:460px">
         <h2 class="center" style="margin-bottom:4px">Wer trainiert?</h2>
@@ -499,7 +514,7 @@
     <div id="confetti"></div>
   </div>
 
-  <script src="demos.js?v=25"></script>
-  <script src="app.js?v=25"></script>
+  <script src="demos.js?v=26"></script>
+  <script src="app.js?v=26"></script>
 </body>
 </html>
