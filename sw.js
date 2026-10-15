@@ -1,7 +1,7 @@
 /* BallHero Kids — offline cache
    Strategy: network-first for our own app shell (so updates always land),
    falling back to cache when offline. */
-const CACHE = 'ballhero-v31';
+const CACHE = 'ballhero-v32';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './demos.js', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {

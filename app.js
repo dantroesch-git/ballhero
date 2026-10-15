@@ -8,6 +8,53 @@
    Kinder-Daten sind per RLS gesperrt; nur diese Funktion (Service-Key) liest/schreibt.
    Zugriff nur mit dem unratbaren Profil-Code. */
 const BACKEND = 'https://lmymmvudmdvecpawufmm.supabase.co/functions/v1/ballhero-reports';
+const APP_VERSION = 'v32';
+
+/* Anonyme Nutzungs-Statistik: keine Namen, keine Videos – nur Zahlen,
+   damit wir sehen, ob die App genutzt wird. Zufalls-Geräte-ID, fire-and-forget. */
+const USAGE_URL = 'https://lmymmvudmdvecpawufmm.supabase.co/functions/v1/ballhero-usage';
+function usageState() { try { return JSON.parse(localStorage.getItem('ballhero.usage') || '{}'); } catch (e) { return {}; } }
+function saveUsage(u) { try { localStorage.setItem('ballhero.usage', JSON.stringify(u)); } catch (e) {} }
+function deviceId() {
+  const u = usageState();
+  if (!u.device) {
+    const a = new Uint8Array(12);
+    try { crypto.getRandomValues(a); } catch (e) { for (let i = 0; i < a.length; i++) a[i] = Math.floor(Math.random() * 256); }
+    u.device = 'd' + [...a].map(b => b.toString(36)).join('').slice(0, 16);
+    u.opens = 0; u.sessions = 0; saveUsage(u);
+  }
+  return u.device;
+}
+function usageSnapshot() {
+  const profs = S.profiles || [];
+  let medals = 0, planDay = 0, city = 0;
+  profs.forEach(e => {
+    const p = e.progress || {};
+    medals += Object.keys(p.medals || {}).length;
+    planDay = Math.max(planDay, (p.plan30 && p.plan30.completed) || 0);
+    city = Math.max(city, (p.career && p.career.city) || 0);
+  });
+  return {
+    profiles: profs.length,
+    age: (S.profile && S.profile.age) || null,
+    mode: (S.progress && S.progress.mode) || null,
+    plan_day: planDay, career_city: city, medals, app_version: APP_VERSION,
+  };
+}
+function trackUsage(kind) {
+  try {
+    const u = usageState();
+    deviceId();
+    const uu = usageState();
+    if (kind === 'open') uu.opens = (uu.opens || 0) + 1;
+    if (kind === 'session') uu.sessions = (uu.sessions || 0) + 1;
+    saveUsage(uu);
+    fetch(USAGE_URL, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ device: uu.device, opens: uu.opens || 0, sessions: uu.sessions || 0, snapshot: usageSnapshot() }),
+    }).catch(() => {});
+  } catch (e) { /* Statistik darf nie stören */ }
+}
 
 /* ---------------- Mission catalog ---------------- */
 const MISSIONS = [
@@ -806,14 +853,16 @@ function boot() {
     try { seen = localStorage.getItem('ballhero.onboarded') === '1'; } catch (e) {}
     if (!seen) showOnboarding(false);
   }
+  trackUsage('open');
 }
 
 /* ---------------- Eltern-Onboarding (Willkommens-Tour) ---------------- */
 const OB_SLIDES = [
   { emoji: '⚽️', title: 'Willkommen bei BallHero', text: 'Der tägliche Technik-Coach für dein Kind. Kleine Missionen, echter Fortschritt — Schritt für Schritt besser am Ball.' },
-  { emoji: '🎥', title: 'So trainiert ihr', text: 'Übung wählen, Animation & Beispielvideo anschauen, dann mit der Kamera aufnehmen. Handy hochkant anlehnen und ca. 3 Schritte zurück — die App zählt von allein los.' },
-  { emoji: '🔍', title: 'Gemeinsam besser werden', text: 'Schaut die Aufnahme danach in Zeitlupe an und hakt zusammen ab, was schon klappt. So sieht dein Kind genau, was gut war und woran es noch arbeitet.' },
-  { emoji: '🔒', title: 'Sicher & einfach', text: 'Alle Videos und Daten bleiben nur auf diesem Gerät. Keine Anmeldung, keine Werbung. Los geht\'s!' },
+  { emoji: '🧭', title: 'Drei Wege zum Training', text: '🎯 30-Tage-Challenge (fester Plan, 2 Übungen/Tag), ✈️ Karriere (reise durch Fußball-Städte und steig auf) oder ⚽ Freies Training (jede Übung selbst wählen). Oben einfach umschalten.' },
+  { emoji: '🎥', title: 'So trainiert ihr', text: 'Übung ansehen (Animation + Beispielvideo), dann mit der Kamera aufnehmen. Handy hochkant anlehnen, ca. 3 Schritte zurück — die App zählt von allein los. Für Medaillen 🥇 das Ziel übertreffen!' },
+  { emoji: '🔍', title: 'Gemeinsam besser werden', text: 'Schaut die Aufnahme in Zeitlupe und Bild für Bild an. Mit dem Stift ✏️ aufs Bild malen (und wieder löschen) und die Checkliste abhaken — so sieht dein Kind genau, was gut war.' },
+  { emoji: '🔒', title: 'Sicher & einfach', text: 'Videos bleiben nur auf diesem Gerät. Wir erfassen nur anonyme Nutzungszahlen (keine Namen, keine Videos), um die App zu verbessern. Keine Anmeldung, keine Werbung. Los geht\'s!' },
 ];
 let obI = 0, obReplay = false;
 function showOnboarding(replay) {
@@ -2292,6 +2341,7 @@ function wireAnalyzer() {
     AN.ci = (AN.ci + 1) % AN.colors.length;
     document.getElementById('anColorDot').style.background = AN.colors[AN.ci];
   };
+  document.getElementById('anUndo').onclick = () => { AN.strokes.pop(); AN.cur = null; redrawAn(); haptic(10); };
   document.getElementById('anClear').onclick = () => { AN.strokes = []; AN.cur = null; redrawAn(); };
   document.getElementById('anScrub').oninput = (e) => {
     if (AN.dur) { v.pause(); document.getElementById('anPlay').textContent = '▶︎'; v.currentTime = e.target.value / 1000 * AN.dur; }
@@ -2383,6 +2433,7 @@ function completeMission(m, reps, seconds, extra) {
   const newBadges = checkBadges(p);
 
   save();
+  trackUsage('session');
   renderHome(); renderProgress(); renderParent();
   showReward(m, reps, starsEarned, extra, { leveledUp, newBadges, medal, medalUp, planDayDone, planMilestone, careerFlew, careerDone });
 }
