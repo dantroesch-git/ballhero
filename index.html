@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="BallHero">
   <title>BallHero Kids</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css?v=29">
+  <link rel="stylesheet" href="styles.css?v=30">
 </head>
 <body>
   <div id="app">
@@ -32,8 +32,8 @@
           <input type="number" id="kidAge" placeholder="6" min="3" max="14" inputmode="numeric">
         </div>
         <div class="field">
-          <label>Avatar</label>
-          <div class="avatar-picker" id="avatarPicker"></div>
+          <label>Dein Trikot 👕</label>
+          <div class="avatar-picker kit-picker" id="avatarPicker"></div>
         </div>
         <button class="btn" id="createProfile">Los geht's ⚽️</button>
         <p class="hint">Alle Daten bleiben nur auf diesem Gerät. Keine Anmeldung, keine Werbung.</p>
@@ -69,36 +69,38 @@
         </div>
       </div>
 
-      <!-- Trainingsstil wählen (Barça / Ajax / PSG / Allround) -->
-      <div class="section-label">🎓 Trainingsstil</div>
-      <div class="academy-row" id="academyRow"></div>
-      <div class="small academy-philo" id="academyPhilo"></div>
+      <!-- Modus-Auswahl: 30-Tage / Karriere / Freies Training -->
+      <div class="mode-row" id="modeRow"></div>
 
-      <!-- 30-Tage-Aufbaukurs -->
-      <div class="card plan-card" id="planCard"></div>
+      <!-- ===== Modus: 30-Tage-Challenge ===== -->
+      <div id="planSection">
+        <div class="card plan-card" id="planCard"></div>
 
-      <!-- Wo trainierst du heute? -->
-      <div class="section-label">📍 Wo trainierst du heute?</div>
-      <div class="loc-toggle" id="locToggle"></div>
+        <div class="section-label">📍 Wo trainierst du heute?</div>
+        <div class="loc-toggle" id="locToggle"></div>
 
-      <div class="card" style="background:linear-gradient(135deg,#242c66,#1a2050)">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <h3 style="margin-bottom:2px">Heute dran</h3>
-            <div class="small" id="homeProgressLbl">0 / 2 erledigt</div>
+        <div class="card" style="background:linear-gradient(135deg,#242c66,#1a2050)">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <h3 style="margin-bottom:2px">Heute dran</h3>
+              <div class="small" id="homeProgressLbl">0 / 2 erledigt</div>
+            </div>
+            <div class="chip xp" id="homeTodayStars">⭐ 0</div>
           </div>
-          <div class="chip xp" id="homeTodayStars">⭐ 0</div>
+          <div class="bar ballControl" style="margin-top:12px"><span id="homeDayBar" style="width:0%"></span></div>
         </div>
-        <div class="bar ballControl" style="margin-top:12px"><span id="homeDayBar" style="width:0%"></span></div>
+
+        <div id="missionList"></div>
+
+        <div class="card center" id="allDoneCard" style="display:none">
+          <div style="font-size:2.6rem">🏆</div>
+          <h3>Alles erledigt — stark!</h3>
+          <p class="small">Komm morgen wieder für deine Streak.</p>
+        </div>
       </div>
 
-      <div id="missionList"></div>
-
-      <div class="card center" id="allDoneCard" style="display:none">
-        <div style="font-size:2.6rem">🏆</div>
-        <h3>Alles erledigt — stark!</h3>
-        <p class="small">Komm morgen wieder für deine Streak.</p>
-      </div>
+      <!-- ===== Modus: Karriere ===== -->
+      <div id="careerSection" hidden></div>
     </section>
 
     <!-- ============ MISSION DETAIL ============ -->
@@ -531,7 +533,7 @@
     <div id="confetti"></div>
   </div>
 
-  <script src="demos.js?v=29"></script>
-  <script src="app.js?v=29"></script>
+  <script src="demos.js?v=30"></script>
+  <script src="app.js?v=30"></script>
 </body>
 </html>

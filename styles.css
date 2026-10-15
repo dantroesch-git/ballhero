@@ -445,6 +445,42 @@ select:focus { outline: 2px solid var(--primary); }
 .ob-nav { display: flex; gap: 10px; }
 .ob-nav .btn { flex: 1; }
 
+/* Trikot-Picker */
+.kit-picker { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.kit-preview { background: var(--card-2); border-radius: 16px; padding: 10px 24px; }
+.kit-colors { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.kit-sw { width: 34px; height: 34px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(0,0,0,.2); }
+.kit-sw.sel { border-color: var(--text); transform: scale(1.1); }
+.kit-num { display: flex; align-items: center; gap: 10px; }
+.kit-num label { font-size: 0.9rem; color: var(--muted); }
+.kit-num input { width: 72px; text-align: center; font-weight: 800; font-size: 1.1rem; padding: 8px; border-radius: 12px; border: 1px solid var(--line); background: var(--card-2); color: var(--text); }
+#homeAvatar svg, .pf-avatar svg { display: block; }
+
+/* Modus-Auswahl */
+.mode-row { display: flex; gap: 8px; margin-bottom: 16px; }
+.mode-tile { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 6px; border-radius: 14px; border: 2px solid var(--line); background: var(--card-2); color: var(--text); cursor: pointer; }
+.mode-tile.on { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 16%, var(--card-2)); }
+.mode-tile:active { transform: scale(0.97); }
+.mt-emoji { font-size: 1.5rem; }
+.mt-name { font-weight: 800; font-size: 0.9rem; }
+.mt-sub { font-size: 0.68rem; color: var(--muted); text-align: center; }
+
+/* Karriere */
+.career-city { background: linear-gradient(135deg, color-mix(in srgb, var(--acc) 30%, #1b1340), #1b1340); border-color: color-mix(in srgb, var(--acc) 40%, var(--line)); }
+.cc-top { display: flex; align-items: center; gap: 12px; }
+.cc-flag { font-size: 2rem; }
+.cc-name { font-weight: 800; font-size: 1.2rem; }
+.cc-focus { margin: 10px 0; font-weight: 600; }
+.career-bar { margin-top: 4px; }
+.career-bar span { background: var(--acc); }
+.career-strip { display: flex; justify-content: space-between; align-items: flex-start; margin: 14px 2px; gap: 2px; }
+.city-step { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.city-dot { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 1.1rem; background: var(--card-2); border: 2px solid var(--line); }
+.city-dot.done { background: var(--green); border-color: transparent; }
+.city-dot.cur { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 35%, transparent); }
+.city-dot.lock { opacity: 0.5; }
+.city-lbl { font-size: 0.65rem; color: var(--muted); text-align: center; }
+
 /* 30-Tage-Aufbaukurs */
 .plan-card { background: linear-gradient(135deg, #2a2160, #1b1340); }
 .plan-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }

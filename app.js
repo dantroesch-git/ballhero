@@ -446,6 +446,54 @@ function personalPhilo() {
 const AVATARS = ['🦊', '🦁', '🐯', '🐸', '🐵', '🐼', '🦄', '🐲', '🦖', '⚽️'];
 const SKILL_LABELS = { ballControl: 'Ballkontrolle', weakFoot: 'Schwacher Fuß', dribbling: 'Dribbling', coordination: 'Koordination' };
 
+/* ---------------- Trikot-Avatar (Farbe + Nummer + Name) ---------------- */
+const KIT_COLORS = ['#e63946', '#1e5aa8', '#35d07f', '#ffd23f', '#9b5de5', '#ff7b00', '#00bbf9', '#222222', '#ffffff', '#f15bb5'];
+let selectedKit = { color: KIT_COLORS[0], number: 10 };
+function jerseySVG(kit, size) {
+  kit = kit || { color: '#e63946', number: 10 };
+  const c = kit.color || '#e63946';
+  const num = (kit.number != null && kit.number !== '') ? kit.number : '';
+  const ink = (c === '#ffffff' || c === '#ffd23f') ? '#1a1a1a' : '#ffffff';
+  size = size || 48;
+  return '<svg viewBox="0 0 48 48" width="' + size + '" height="' + size + '" aria-hidden="true">' +
+    '<path d="M16 6 L10 10 L5 18 L11 23 L15 19 L15 43 L33 43 L33 19 L37 23 L43 18 L38 10 L32 6 C30 10.5 18 10.5 16 6 Z" fill="' + c + '" stroke="rgba(0,0,0,.3)" stroke-width="1.2"/>' +
+    '<text x="24" y="36" text-anchor="middle" font-size="15" font-weight="800" fill="' + ink + '" font-family="system-ui,sans-serif">' + num + '</text></svg>';
+}
+/* Avatar-HTML für ein Profil: Trikot wenn vorhanden, sonst altes Emoji */
+function avatarHTML(prof, size) {
+  if (prof && prof.kit) return jerseySVG(prof.kit, size || 44);
+  return '<span style="font-size:' + Math.round((size || 44) * 0.7) + 'px">' + ((prof && prof.avatar) || '⚽️') + '</span>';
+}
+
+/* ---------------- Karriere-Modus: Reise durch Fußball-Städte ---------------- */
+/* Eigene Akademie-Namen (keine echten Clubs/Marken) – transportieren nur den Stil. */
+const CAREER_CITIES = [
+  { id: 'home', city: 'Heimat', academy: 'Bolzplatz-Start', flag: '🏠', color: '#35d07f', focus: 'Ballgefühl & erste Kontrolle', missions: ['toetaps', 'foundations', 'solerolls', 'stopball', 'insideout', 'bells'], target: 6 },
+  { id: 'ams', city: 'Amsterdam', academy: 'Dribbel-Akademie', flag: '🟠', color: '#ff7b00', focus: 'Dribbeln, Finten & beide Füße', missions: ['stepover', 'slalom', 'cutinside', 'weakfoot', 'figure8', 'trick'], target: 6 },
+  { id: 'bcn', city: 'Barcelona', academy: 'Zauberfuß-Schule', flag: '🔵', color: '#1e5aa8', focus: 'Enger Ball, Croqueta & Kopf hoch', missions: ['croqueta', 'foundations', 'onevone', 'weakdribble', 'insideout', 'dragback'], target: 6 },
+  { id: 'par', city: 'Paris', academy: 'Tempo-Schmiede', flag: '🔴', color: '#e63946', focus: 'Schuss, Antritt & Explosivität', missions: ['striking', 'shot', 'sprintball', 'speeddribble', 'quickfeet', 'wallpass'], target: 6 },
+  { id: 'world', city: 'Welt', academy: 'Weltmeister-Finale', flag: '🏆', color: '#ffd23f', focus: 'Alles zusammen – zeig, was du kannst!', missions: ['croqueta', 'stepover', 'striking', 'onevone', 'juggling', 'weakfoot'], target: 8 },
+];
+function career() {
+  const p = S.progress;
+  if (!p.career) p.career = { city: 0, done: 0 };
+  return p.career;
+}
+function careerCity() { return CAREER_CITIES[Math.min(career().city, CAREER_CITIES.length - 1)]; }
+function careerFinished() { return career().city >= CAREER_CITIES.length; }
+function careerMissions() {
+  const c = careerCity();
+  return c.missions.map(id => MISSIONS.find(m => m.id === id)).filter(Boolean);
+}
+/* aktiver Modus: 'plan30' | 'career' */
+function activeMode() { return (S.progress && S.progress.mode) || 'plan30'; }
+function setMode(mode) {
+  if (!S.progress) return;
+  if (mode === 'free') { go('library'); if (typeof renderLibrary === 'function') renderLibrary(); return; }
+  S.progress.mode = mode; save();
+  renderHome(); haptic(12);
+}
+
 /* ===========================================================
    SPRACHE — das Kernstück für Kinder, die noch nicht lesen.
    Jeder Screen erklärt sich selbst laut.
@@ -701,6 +749,8 @@ function freshProgress() {
     medals: {},        // missionId -> 'bronze'|'silver'|'gold' (beste)
     location: 'drinnen',
     plan30: { completed: 0, lastDate: null, startedAt: todayKey() },  // 30-Tage-Kurs
+    mode: 'plan30',    // aktiver Modus: 'plan30' | 'career'
+    career: { city: 0, done: 0 },
   };
 }
 
@@ -714,6 +764,8 @@ function migrateProgress(p) {
   if (!p.medals) p.medals = {};
   if (!p.location) p.location = 'drinnen';
   if (!p.plan30) p.plan30 = { completed: 0, lastDate: null, startedAt: todayKey() };
+  if (!p.mode) p.mode = 'plan30';
+  if (!p.career) p.career = { city: 0, done: 0 };
   // Persönlichen Plan einmalig aktiv setzen (aus der Video-Analyse)
   if (!p.planSet) { p.academy = 'personal'; p.planSet = true; }
 }
@@ -803,27 +855,37 @@ function ensureDaily() {
 
 /* ---------------- Onboarding ---------------- */
 let selectedAvatar = AVATARS[0];
+/* Trikot-Picker: Vorschau + Farbwahl + Nummer */
 function buildAvatarPicker() {
   const wrap = document.getElementById('avatarPicker');
-  wrap.innerHTML = '';
-  AVATARS.forEach((a, i) => {
-    const el = document.createElement('button');
-    el.className = 'avatar-opt' + (i === 0 ? ' sel' : '');
-    el.textContent = a; el.type = 'button';
-    el.onclick = () => {
-      selectedAvatar = a;
-      wrap.querySelectorAll('.avatar-opt').forEach(x => x.classList.remove('sel'));
-      el.classList.add('sel');
-    };
-    wrap.appendChild(el);
+  if (!wrap) return;
+  selectedKit = { color: KIT_COLORS[0], number: Math.floor(Math.random() * 20) + 1 };
+  wrap.innerHTML =
+    '<div class="kit-preview" id="kitPreview">' + jerseySVG(selectedKit, 96) + '</div>' +
+    '<div class="kit-colors" id="kitColors">' +
+      KIT_COLORS.map((c, i) => '<button type="button" class="kit-sw' + (i === 0 ? ' sel' : '') + '" data-c="' + c + '" style="background:' + c + '" aria-label="Farbe"></button>').join('') +
+    '</div>' +
+    '<div class="kit-num"><label for="kitNumber">Rückennummer</label>' +
+    '<input type="number" id="kitNumber" min="1" max="99" value="' + selectedKit.number + '" inputmode="numeric"></div>';
+  const refresh = () => { document.getElementById('kitPreview').innerHTML = jerseySVG(selectedKit, 96); };
+  wrap.querySelectorAll('.kit-sw').forEach(b => b.onclick = () => {
+    selectedKit.color = b.dataset.c;
+    wrap.querySelectorAll('.kit-sw').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel'); refresh();
   });
+  wrap.querySelector('#kitNumber').oninput = (e) => {
+    let n = parseInt(e.target.value, 10);
+    selectedKit.number = isNaN(n) ? '' : Math.max(1, Math.min(99, n));
+    refresh();
+  };
 }
 
 function createProfile() {
   const name = document.getElementById('kidName').value.trim() || 'Champion';
   const age = parseInt(document.getElementById('kidAge').value, 10) || 6;
   const id = 'p' + Date.now();
-  const entry = { id, profile: { name, age, avatar: selectedAvatar, createdAt: todayKey() }, progress: freshProgress() };
+  const kit = { color: selectedKit.color, number: (selectedKit.number || 10) };
+  const entry = { id, profile: { name, age, kit, avatar: '⚽️', createdAt: todayKey() }, progress: freshProgress() };
   S.profiles.push(entry);
   S.activeId = id;
   bindActive();
@@ -857,7 +919,7 @@ function renderProfileChooser() {
   wrap.innerHTML = S.profiles.map(e => {
     const rk = rankFor(e.progress.xp || 0);
     return '<div class="pf-card' + (e.id === S.activeId ? ' active' : '') + '" data-id="' + e.id + '">' +
-      '<div class="pf-avatar">' + (e.profile.avatar || '⚽️') + '</div>' +
+      '<div class="pf-avatar">' + avatarHTML(e.profile, 54) + '</div>' +
       '<div class="pf-name">' + e.profile.name + '</div>' +
       '<div class="pf-sub">' + e.profile.age + ' J. · ' + rk.rank.emoji + ' ' + rk.rank.name + '</div>' +
       '<button class="pf-del" data-del="' + e.id + '" title="Löschen">✕</button></div>';
@@ -882,7 +944,6 @@ function addProfileFlow() {
   document.getElementById('profileChooser').classList.remove('show');
   document.getElementById('kidName').value = '';
   document.getElementById('kidAge').value = '';
-  selectedAvatar = AVATARS[0];
   buildAvatarPicker();
   go('welcome');
 }
@@ -937,7 +998,7 @@ function renderAcademyRow() {
 
 function renderHome() {
   const p = S.progress, prof = S.profile;
-  document.getElementById('homeAvatar').textContent = prof.avatar;
+  document.getElementById('homeAvatar').innerHTML = avatarHTML(prof, 44);
   document.getElementById('homeName').textContent = prof.name;
   document.getElementById('homeStreak').textContent = p.streak;
   document.getElementById('homeXP').textContent = p.xp;
@@ -948,7 +1009,13 @@ function renderHome() {
   document.getElementById('rankNext').textContent = rk.next ? 'noch ' + (rk.next.xp - p.xp) + ' XP' : 'Maximum! 👑';
   document.getElementById('rankBar').style.width = Math.round(rk.progress * 100) + '%';
 
-  renderAcademyRow();
+  // Modus-Auswahl + nur den aktiven Modus zeigen
+  renderModeRow();
+  const mode = activeMode();
+  document.getElementById('planSection').hidden = (mode !== 'plan30');
+  document.getElementById('careerSection').hidden = (mode !== 'career');
+  if (mode === 'career') { renderCareer(); return; }
+
   renderLocToggle();
   renderPlanCard();
 
@@ -992,6 +1059,67 @@ function renderHome() {
   } else {
     card.style.display = 'none';
   }
+}
+
+/* Modus-Auswahl: 30-Tage / Karriere / Frei */
+function renderModeRow() {
+  const row = document.getElementById('modeRow');
+  if (!row) return;
+  const mode = activeMode();
+  const tiles = [
+    { id: 'plan30', emoji: '🎯', name: '30-Tage', sub: 'Challenge' },
+    { id: 'career', emoji: '✈️', name: 'Karriere', sub: 'Reise & Aufstieg' },
+    { id: 'free', emoji: '⚽', name: 'Frei', sub: 'Selbst wählen' },
+  ];
+  row.innerHTML = tiles.map(t =>
+    '<button class="mode-tile' + (t.id === mode ? ' on' : '') + '" data-mode="' + t.id + '">' +
+    '<span class="mt-emoji">' + t.emoji + '</span><span class="mt-name">' + t.name + '</span>' +
+    '<span class="mt-sub">' + t.sub + '</span></button>').join('');
+  row.querySelectorAll('.mode-tile').forEach(b => b.onclick = () => { if (sfx.pop) sfx.pop(); setMode(b.dataset.mode); });
+}
+
+/* Karriere-Modus: Reise durch die Fußball-Städte */
+function renderCareer() {
+  const sec = document.getElementById('careerSection');
+  if (!sec) return;
+  const c = career();
+  const strip = CAREER_CITIES.map((ct, i) => {
+    const st = i < c.city ? 'done' : (i === c.city && !careerFinished() ? 'cur' : 'lock');
+    return '<div class="city-step"><div class="city-dot ' + st + '">' + (st === 'lock' ? '🔒' : ct.flag) + '</div>' +
+      '<div class="city-lbl">' + ct.city + '</div></div>';
+  }).join('');
+  if (careerFinished()) {
+    sec.innerHTML = '<div class="card center"><div style="font-size:3rem">🏆</div><h2>Weltmeister!</h2>' +
+      '<p class="small">Du hast alle Stationen gemeistert. Trainiere frei weiter oder starte die 30-Tage-Challenge.</p></div>' +
+      '<div class="career-strip">' + strip + '</div>';
+    return;
+  }
+  const city = careerCity();
+  const done = c.done || 0, target = city.target;
+  const next = CAREER_CITIES[c.city + 1];
+  const medals = S.progress.medals || {};
+  sec.innerHTML =
+    '<div class="card career-city" style="--acc:' + city.color + '">' +
+      '<div class="cc-top"><div class="cc-flag">' + city.flag + '</div>' +
+        '<div><div class="cc-name">' + city.city + '</div><div class="small">' + city.academy + '</div></div></div>' +
+      '<div class="cc-focus">🎯 ' + city.focus + '</div>' +
+      '<div class="bar career-bar"><span style="width:' + Math.round(done / target * 100) + '%"></span></div>' +
+      '<div class="small" style="margin-top:6px">' + done + ' / ' + target + ' Trainings bis zum Abflug' +
+        (next ? ' nach ' + next.city + ' ' + next.flag : '') + '</div>' +
+    '</div>' +
+    '<div class="career-strip">' + strip + '</div>' +
+    '<div class="section-label">Übungen dieser Station</div><div id="careerList"></div>';
+  const list = sec.querySelector('#careerList');
+  careerMissions().forEach(m => {
+    const med = medals[m.id];
+    const el = document.createElement('div');
+    el.className = 'mission';
+    el.innerHTML = '<div class="emoji">' + m.emoji + '</div>' +
+      '<div class="body"><div class="title">' + m.title + (med ? ' <span class="m-medal">' + MEDAL_EMOJI[med] + '</span>' : '') + '</div>' +
+      '<div class="meta">' + goalFor(m) + ' ' + m.unit + '</div></div><div class="stars">+' + m.stars + '⭐</div>';
+    el.onclick = () => { sfx.pop(); haptic(14); openMission(m.id, 'home'); };
+    list.appendChild(el);
+  });
 }
 
 /* 30-Tage-Kurs-Karte: „Tag X von 30" + Fortschritts-Reihe */
@@ -2180,13 +2308,27 @@ function completeMission(m, reps, seconds, extra) {
     }
   }
 
+  // Karriere: jedes Training zählt für die aktuelle Stadt
+  let careerFlew = null, careerDone = false;
+  if (activeMode() === 'career') {
+    const c = career();
+    if (c.city < CAREER_CITIES.length) {
+      c.done = (c.done || 0) + 1;
+      if (c.done >= careerCity().target) {
+        c.city += 1; c.done = 0;
+        if (c.city >= CAREER_CITIES.length) careerDone = true;
+        else careerFlew = CAREER_CITIES[c.city];
+      }
+    }
+  }
+
   // Level-up? Neue Trophäen?
   const leveledUp = rankFor(p.xp).idx > rankFor(xpBefore).idx;
   const newBadges = checkBadges(p);
 
   save();
   renderHome(); renderProgress(); renderParent();
-  showReward(m, reps, starsEarned, extra, { leveledUp, newBadges, medal, medalUp, planDayDone, planMilestone });
+  showReward(m, reps, starsEarned, extra, { leveledUp, newBadges, medal, medalUp, planDayDone, planMilestone, careerFlew, careerDone });
 }
 
 /* ---------------- Reward ---------------- */
@@ -2202,6 +2344,11 @@ function showReward(m, reps, stars, extra, celebrate) {
   document.getElementById('rewardStars').textContent = stars > 0 ? '⭐️'.repeat(stars) : '+' + (Math.round(reps / 4) + 5) + ' XP';
 
   let extraHtml = '';
+  if (celebrate.careerDone) {
+    extraHtml += '<div class="reward-milestone">🏆 Weltmeister — alle Stationen geschafft!</div>';
+  } else if (celebrate.careerFlew) {
+    extraHtml += '<div class="reward-milestone">✈️ Du fliegst nach ' + celebrate.careerFlew.city + '! ' + celebrate.careerFlew.flag + '</div>';
+  }
   if (celebrate.planMilestone) {
     extraHtml += '<div class="reward-milestone">' + celebrate.planMilestone + '</div>';
   } else if (celebrate.planDayDone) {
@@ -2228,6 +2375,7 @@ function showReward(m, reps, stars, extra, celebrate) {
   else { confetti(stars >= 3 ? 60 : 40); sfx.success(); }
   if (newBadges.length) setTimeout(() => { sfx.badge(); confetti(30); }, 600);
   if (celebrate.planMilestone) setTimeout(() => { sfx.levelup && sfx.levelup(); confetti(90); haptic([30, 40, 60]); }, 500);
+  if (celebrate.careerFlew || celebrate.careerDone) setTimeout(() => { sfx.levelup && sfx.levelup(); confetti(100); haptic([30, 40, 60]); }, 500);
 
   // Ansage laut — Level-up und Trophäen zuerst, dann Lob + ein Tipp
   let spoken = '';
