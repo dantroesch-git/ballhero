@@ -502,6 +502,8 @@ select:focus { outline: 2px solid var(--primary); }
 }
 .loc-chip.on { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 18%, var(--card-2)); }
 .loc-chip:active { transform: scale(0.98); }
+.loc-chip { display: flex; flex-direction: column; align-items: center; gap: 2px; line-height: 1.2; }
+.loc-sub { font-size: 0.68rem; font-weight: 600; color: var(--muted); }
 
 /* Medaille auf der Übungskarte */
 .m-medal { font-size: 0.95rem; }

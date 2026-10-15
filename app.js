@@ -239,13 +239,13 @@ const GEAR_MAP = {
   slalom:{g:['ball','huetchen'],s:'platz'}, weakfoot:{g:['ball'],s:'zimmer'},
   juggling:{g:['ball'],s:'zimmer'}, trick:{g:['ball'],s:'zimmer'},
   croqueta:{g:['ball'],s:'zimmer'}, stepover:{g:['ball'],s:'zimmer'},
-  striking:{g:['ball','wand'],s:'zimmer'}, solerolls:{g:['ball'],s:'zimmer'},
+  striking:{g:['ball','wand'],s:'platz'}, solerolls:{g:['ball'],s:'zimmer'},
   insideout:{g:['ball'],s:'zimmer'}, bells:{g:['ball'],s:'zimmer'}, figure8:{g:['ball'],s:'zimmer'},
   speeddribble:{g:['ball'],s:'platz'}, onevone:{g:['ball','huetchen'],s:'platz'},
   cutinside:{g:['ball','huetchen'],s:'zimmer'}, dragback:{g:['ball'],s:'zimmer'},
-  weakwall:{g:['ball','wand'],s:'zimmer'}, weakdribble:{g:['ball'],s:'zimmer'},
+  weakwall:{g:['ball','wand'],s:'platz'}, weakdribble:{g:['ball'],s:'zimmer'},
   quickfeet:{g:[],s:'zimmer'}, stopball:{g:['ball'],s:'zimmer'},
-  sprintball:{g:['ball'],s:'platz'}, wallpass:{g:['ball','wand'],s:'zimmer'},
+  sprintball:{g:['ball'],s:'platz'}, wallpass:{g:['ball','wand'],s:'platz'},
   shot:{g:['ball','huetchen','minitor'],s:'platz'},
 };
 MISSIONS.forEach(m => { const x = GEAR_MAP[m.id] || { g: ['ball'], s: 'zimmer' }; m.gear = x.g; m.space = x.s; });
@@ -297,7 +297,10 @@ function academyMissions() {
 function locationPref() { return (S.progress && S.progress.location) || 'drinnen'; }
 function indoorOk(m) { return m.space === 'zimmer'; }
 /* Platz-Übung → Zimmer-Alternative (gleiche Skill-Richtung), wenn „Drinnen" */
-const INDOOR_ALT = { slalom: 'solerolls', speeddribble: 'insideout', onevone: 'stepover', sprintball: 'bells', shot: 'striking' };
+const INDOOR_ALT = {
+  slalom: 'solerolls', speeddribble: 'insideout', onevone: 'stepover', sprintball: 'bells',
+  shot: 'solerolls', striking: 'stopball', weakwall: 'weakdribble', wallpass: 'foundations',
+};
 function indoorize(m) {
   if (!m || m.space === 'zimmer') return m;
   const alt = INDOOR_ALT[m.id];
@@ -1041,7 +1044,7 @@ function renderHome() {
       '<div class="emoji">' + m.emoji + '</div>' +
       '<div class="body"><div class="title">' + m.title +
         (med ? ' <span class="m-medal" title="Beste Medaille">' + MEDAL_EMOJI[med] + '</span>' : '') + '</div>' +
-      '<div class="meta">' + goalFor(m) + ' ' + m.unit + (m.space === 'zimmer' ? ' · 🏠' : ' · 📏') + '</div></div>' +
+      '<div class="meta">' + goalFor(m) + ' ' + m.unit + ' · ' + spaceTag(m) + '</div></div>' +
       (isDone ? '<div class="check">✓</div>' : '<div class="stars">+' + m.stars + '⭐</div>');
     el.onclick = () => { sfx.pop(); haptic(14); openMission(m.id, 'home'); };
     list.appendChild(el);
@@ -1059,6 +1062,8 @@ function renderHome() {
   } else {
     card.style.display = 'none';
   }
+
+  renderBonus();
 }
 
 /* Modus-Auswahl: 30-Tage / Karriere / Frei */
@@ -1146,17 +1151,68 @@ function renderPlanCard() {
     '<div class="plan-strip">' + dots + '</div>';
 }
 
-/* Ort-Umschalter (drinnen/draußen) */
+/* Ort-/Platz-Hinweis einer Übung */
+function spaceTag(m) {
+  if (m.space === 'zimmer') return '🏠 Zimmer';
+  if ((m.gear || []).includes('wand')) return '🌳 Wand';
+  if ((m.gear || []).includes('huetchen')) return '🌳 Hütchen';
+  return '🌳 Platz';
+}
+
+/* Ort-Umschalter (drinnen/draußen) — mit Erklärung */
 function renderLocToggle() {
   const box = document.getElementById('locToggle');
   if (!box) return;
   const loc = locationPref();
   box.innerHTML =
-    '<button class="loc-chip' + (loc === 'drinnen' ? ' on' : '') + '" data-loc="drinnen">🏠 Drinnen</button>' +
-    '<button class="loc-chip' + (loc === 'draußen' ? ' on' : '') + '" data-loc="draußen">🌳 Draußen</button>';
+    '<button class="loc-chip' + (loc === 'drinnen' ? ' on' : '') + '" data-loc="drinnen">🏠 Drinnen<span class="loc-sub">Technik im Zimmer</span></button>' +
+    '<button class="loc-chip' + (loc === 'draußen' ? ' on' : '') + '" data-loc="draußen">🌳 Draußen<span class="loc-sub">Platz · Wand · Hütchen</span></button>';
   box.querySelectorAll('.loc-chip').forEach(b => {
     b.onclick = () => { if (b.dataset.loc !== loc) setLocation(b.dataset.loc); };
   });
+}
+
+/* Extra-Übungen: Kind will mehr als die 2 Tagesübungen */
+function poolForLocation() {
+  let pool = MISSIONS.slice();
+  if (locationPref() === 'drinnen') pool = pool.filter(indoorOk);
+  return pool;
+}
+function addExtraExercise() {
+  const p = S.progress;
+  if (!p.today.extraIds) p.today.extraIds = [];
+  const core = p.today.planIds || [];
+  const used = new Set([...core, ...p.today.extraIds]);
+  let pool = poolForLocation().filter(m => !used.has(m.id));
+  if (!pool.length) pool = poolForLocation().filter(m => !core.includes(m.id)); // alles durch → Wiederholung erlauben
+  if (!pool.length) return;
+  const m = pool[p.today.extraIds.length % pool.length];
+  p.today.extraIds.push(m.id);
+  save();
+  renderHome();
+  toast('Extra-Übung dazu! 💪');
+}
+function renderBonus() {
+  const sec = document.getElementById('bonusSection');
+  if (!sec) return;
+  const p = S.progress, done = p.today.doneIds, medals = p.medals || {};
+  const extras = (p.today.extraIds || []).map(id => MISSIONS.find(m => m.id === id)).filter(Boolean);
+  let html = '';
+  if (extras.length) {
+    html += '<div class="section-label">➕ Extra-Übungen</div>';
+    extras.forEach(m => {
+      const isDone = done.includes(m.id), med = medals[m.id];
+      html += '<div class="mission' + (isDone ? ' done' : '') + '" data-x="' + m.id + '">' +
+        '<div class="emoji">' + m.emoji + '</div><div class="body"><div class="title">' + m.title +
+        (med ? ' <span class="m-medal">' + MEDAL_EMOJI[med] + '</span>' : '') + '</div>' +
+        '<div class="meta">' + goalFor(m) + ' ' + m.unit + ' · ' + spaceTag(m) + '</div></div>' +
+        (isDone ? '<div class="check">✓</div>' : '<div class="stars">+' + m.stars + '⭐</div>') + '</div>';
+    });
+  }
+  html += '<button class="btn secondary mt" id="addExtraBtn">➕ Noch eine Übung</button>';
+  sec.innerHTML = html;
+  sec.querySelectorAll('.mission[data-x]').forEach(el => el.onclick = () => { sfx.pop(); haptic(14); openMission(el.dataset.x, 'home'); });
+  document.getElementById('addExtraBtn').onclick = addExtraExercise;
 }
 
 /* ---------------- Übungs-Bibliothek ---------------- */
